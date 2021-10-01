@@ -224,7 +224,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-10-01 18:00:32" itemprop="dateModified" datetime="2021-10-01T18:00:32+08:00">2021-10-01</time>
+        <time title="修改时间：2021-10-01 18:04:05" itemprop="dateModified" datetime="2021-10-01T18:04:05+08:00">2021-10-01</time>
       </span>
 
   
@@ -234,7 +234,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>677</span>
+      <span>679</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -253,14 +253,14 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>由D.E.Knuth/V.R.Pratt/J.H.Morris同时发现，简称为KMP算法。此算法可以在O(n+m)的时间复杂度上完成串的模式匹配操作。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">void get_next(SString T, int next[])&#123;</span><br><span class="line">    //求模式串T的next函数值并存入数组next</span><br><span class="line">    i=1; next[1]=0; j=0;</span><br><span class="line">    while(i&lt;T[0])&#123;</span><br><span class="line">        if(j==0||T[i]==T[j]) &#123;++i; ++j; next[i]=j;&#125;</span><br><span class="line">        else j=next[j];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int Index_KMP(SString S, SString T, int pos)&#123;</span><br><span class="line">    //利用模式串T的next函数求T在主串S中第pos个字符之后的位置。其中T非空，1&lt;=pos&lt;=StrLength(S)</span><br><span class="line">    i=pos; j=1;</span><br><span class="line">    while( i&lt;=S[0] &amp;&amp; j&lt;=T[0] ) &#123;</span><br><span class="line">        if ( i&lt;=S[0] || S[i]==T[j] ) &#123;++i; ++j;&#125;</span><br><span class="line">        else j = next[j];</span><br><span class="line">    &#125;</span><br><span class="line">    if(j&gt;T[0]) return i-T[0];</span><br><span class="line">    else return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>定义：next（j）为匹配串位置j与主串位置i失配时，滑动匹配串，使其匹配串位置next(j)的字符与主串位置i的字符继续匹配。</li>
-<li>求next数组时，主要是利用next[i-1]推出next[i]\
-主要思想是每次都尽量匹配最长长度，就是next[k]</li>
-<li></li>
-</ol>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/29/KMP%E7%AE%97%E6%B3%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
