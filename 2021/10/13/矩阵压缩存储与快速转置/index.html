@@ -20,28 +20,28 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="这是对go-tour指南的一篇小笔记">
+<meta name="description" content="n阶对称矩阵将n2个元压缩存储到n(n+1)&#x2F;2个元的空间中。 现有一维数组ax[ $\frac{i(i-1)}{2}$ ]，则sa[k]和矩阵元aij之间存在的对应关系：$$f(x)&#x3D;\begin{cases}\frac{i(i-1)}{2}+j-1&amp; \text{i$\geq$j}\\frac{j(j-1)}{2}+i-1&amp; \text{i&lt;j}\end{cases}">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go-tour">
-<meta property="og:url" content="https://husterdjx.github.io/2021/09/19/go-tour/index.html">
+<meta property="og:title" content="矩阵压缩存储与快速转置">
+<meta property="og:url" content="https://husterdjx.github.io/2021/10/13/%E7%9F%A9%E9%98%B5%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8%E4%B8%8E%E5%BF%AB%E9%80%9F%E8%BD%AC%E7%BD%AE/index.html">
 <meta property="og:site_name" content="huster-DJX">
-<meta property="og:description" content="这是对go-tour指南的一篇小笔记">
+<meta property="og:description" content="n阶对称矩阵将n2个元压缩存储到n(n+1)&#x2F;2个元的空间中。 现有一维数组ax[ $\frac{i(i-1)}{2}$ ]，则sa[k]和矩阵元aij之间存在的对应关系：$$f(x)&#x3D;\begin{cases}\frac{i(i-1)}{2}+j-1&amp; \text{i$\geq$j}\\frac{j(j-1)}{2}+i-1&amp; \text{i&lt;j}\end{cases}">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-09-19T01:59:34.000Z">
-<meta property="article:modified_time" content="2021-09-19T02:34:21.309Z">
+<meta property="article:published_time" content="2021-10-13T06:21:06.000Z">
+<meta property="article:modified_time" content="2021-10-14T05:35:49.256Z">
 <meta property="article:author" content="huster-djx">
-<meta property="article:tag" content="go">
+<meta property="article:tag" content="数据结构">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://husterdjx.github.io/2021/09/19/go-tour/">
+<link rel="canonical" href="https://husterdjx.github.io/2021/10/13/%E7%9F%A9%E9%98%B5%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8%E4%B8%8E%E5%BF%AB%E9%80%9F%E8%BD%AC%E7%BD%AE/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/09/19/go-tour/","path":"2021/09/19/go-tour/","title":"go-tour"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/10/13/%E7%9F%A9%E9%98%B5%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8%E4%B8%8E%E5%BF%AB%E9%80%9F%E8%BD%AC%E7%BD%AE/","path":"2021/10/13/矩阵压缩存储与快速转置/","title":"矩阵压缩存储与快速转置"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>go-tour | huster-DJX</title>
+<title>矩阵压缩存储与快速转置 | huster-DJX</title>
   
 
 
@@ -108,7 +108,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -121,6 +121,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#n%E9%98%B6%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5"><span class="nav-number">1.</span> <span class="nav-text">n阶对称矩阵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E5%AF%B9%E8%A7%92%E7%9F%A9%E9%98%B5"><span class="nav-number">2.</span> <span class="nav-text">三对角矩阵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%80%E7%96%8F%E7%9F%A9%E9%98%B5"><span class="nav-number">3.</span> <span class="nav-text">稀疏矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E5%85%83%E7%BB%84%E9%A1%BA%E5%BA%8F%E8%A1%A8"><span class="nav-number">3.1.</span> <span class="nav-text">三元组顺序表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E7%BD%AE%E7%AE%97%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">转置算法</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -199,7 +200,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/09/19/go-tour/">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/10/13/%E7%9F%A9%E9%98%B5%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8%E4%B8%8E%E5%BF%AB%E9%80%9F%E8%BD%AC%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -212,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          go-tour
+          矩阵压缩存储与快速转置
         </h1>
 
         <div class="post-meta-container">
@@ -222,19 +223,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-09-19 09:59:34 / 修改时间：10:34:21" itemprop="dateCreated datePublished" datetime="2021-09-19T09:59:34+08:00">2021-09-19</time>
+      <time title="创建时间：2021-10-13 14:21:06" itemprop="dateCreated datePublished" datetime="2021-10-13T14:21:06+08:00">2021-10-13</time>
     </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
         </span>
-    </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-10-14 13:35:49" itemprop="dateModified" datetime="2021-10-14T13:35:49+08:00">2021-10-14</time>
+      </span>
 
   
     <span class="post-meta-break"></span>
@@ -243,14 +241,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
+      <span>1.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>1 分钟</span>
     </span>
 </div>
 
@@ -261,40 +259,33 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>这是对go-tour指南的一篇小笔记</p>
-<span id="more"></span>
-<ol>
-<li>在 Go 中，如果一个名字以大写字母开头，那么它就是已导出的。在导入一个包时，你只能引用其中已导出的名字</li>
-<li>函数外的每个语句都必须以关键字开始（var, func 等等），因此 := 结构不能在函数外使用。</li>
-<li>一个未指定类型的常量由上下文来决定其类型。</li>
-<li>defer 语句会将函数推迟到外层函数返回之后执行。推迟的函数调用会被压入一个栈中</li>
-<li>切片并不存储任何数据,更改切片的元素会修改其底层数组中对应的元素。</li>
-<li>b := make([]T, len, cap T)</li>
-<li>func append(s []T, vs …T) []T</li>
-<li>func copy(dst, src []T) int<br>copy 函数支持不同长度的切片之间的复制（它只复制较短切片的长度个元素）。 此外， copy 函数可以正确处理源和目的切片有重叠的情况。</li>
-<li>make 函数会返回给定类型的映射，并将其初始化备用。(必须使用)当从映射中读取某个不存在的键时，结果是映射的元素类型的零值。</li>
-<li>Go 函数可以是一个闭包。闭包是一个函数值，它引用了其函数体之外的变量。该函数可以访问并赋予其引用的变量的值，换句话说，该函数被这些变量“绑定”在一起。</li>
-<li>方法就是一类带特殊的 接收者 参数的函数。方法接收者在它自己的参数列表内，位于 func 关键字和方法名之间。(方法只是个带接收者参数的函数。)<br>注：接收者的类型定义和方法声明必须在同一包内；不能为内建类型声明方法。</li>
-<li>指针接收者的方法可以修改接收者指向的值；若使用值接收者，那么方法会对值的副本进行操作。</li>
-<li>以指针为接收者的方法被调用时，接收者既能为值又能为指针(这不同于函数参数必须对应)。接受者为值时，go编译器会修改其为指针接受者。同样的，在以值为接收者的方法被调用时，接收者既能为值又能为指针。</li>
-<li><strong>接口类型的变量可以保存任何实现了这些方法的值</strong>。</li>
-<li>类型通过实现一个接口的所有方法来实现该接口</li>
-<li>在内部，接口值可以看做包含值和具体类型的元组：(value, type)<br>接口值保存了一个具体底层类型的具体值。<br>接口值调用方法时会执行其底层类型的同名方法。</li>
-<li>为 nil 接口调用方法会产生运行时错误，因为接口的元组内并未包含能够指明该调用哪个<strong>具体</strong>方法的类型。</li>
-<li>指定了零个方法的接口值被称为 <em>空接口：</em>    interface{}<br>空接口可保存任何类型的值。(因为每个类型都至少实现了零个方法)<br>空接口被用来处理未知类型的值。</li>
-<li>类型断言：<ul>
-<li>t := i.(T)<br>该语句断言接口值 i 保存了具体类型 T，并将其底层类型为 T 的值赋予变量 t。<br>若 i 并未保存 T 类型的值，该语句就会触发一个恐慌。</li>
-<li>t, ok := i.(T)<br>若 i 保存了一个 T，那么 t 将会是其底层值，而 ok 为 true。否则，ok 将为 false 而 t 将为 T 类型的零值，程序并不会产生恐慌。</li>
+        <span id="more"></span>
+
+<h1 id="n阶对称矩阵"><a href="#n阶对称矩阵" class="headerlink" title="n阶对称矩阵"></a>n阶对称矩阵</h1><p>将n<sup>2</sup>个元压缩存储到n(n+1)/2个元的空间中。</p>
+<p>现有一维数组ax[ $\frac{i(i-1)}{2}$ ]，则sa[k]和矩阵元a<sub>ij</sub>之间存在的对应关系：<br>$$<br>f(x)=<br>\begin{cases}<br>\frac{i(i-1)}{2}+j-1&amp; \text{i$\geq$j}\<br>\frac{j(j-1)}{2}+i-1&amp; \text{i&lt;j}<br>\end{cases}<br>$$</p>
+<p>sa[$\frac{i(i-1)}{2}$]为n阶对称矩阵A的压缩存储</p>
+<h1 id="三对角矩阵"><a href="#三对角矩阵" class="headerlink" title="三对角矩阵"></a>三对角矩阵</h1><p>按行为顺序进行一维存储</p>
+<p>对于n阶三对角矩阵，元素总数为2+3*(n-2)+2=<strong>3n-2</strong></p>
+<p>已知i,j:</p>
+<ul>
+<li>求在数组中的位置k=2+3*(i-2)+j-i+1=2i+j-3</li>
 </ul>
-</li>
-<li>类型选择：<br>switch v := i.(type)</li>
-<li>fmt 包中定义的 Stringer 是一个可以用字符串描述自己的类型。fmt 包（还有很多包）都通过此接口来打印值。<br>可通过重写此接口改变fmt.Println的输出</li>
-<li>io.Reader 接口有一个 Read 方法：<br>func (T) Read(b []byte) (n int, err error)<br>包含在io包中</li>
-<li>go f(x, y, z)会启动一个新的 Go 程并执行f(x, y, z)<br>f, x, y 和 z 的求值发生在当前的 Go 程中，而 f 的执行发生在新的 Go 程中<br>Go 程在相同的地址空间中运行，因此在访问共享的内存时必须进行同步。</li>
-<li>信道是带有类型的管道，你可以通过它用信道操作符 &lt;- 来发送或者接收值。<br>ch := make(chan int) 信道在使用前必须被创建、<br>默认情况下，发送和接收操作在另一端准备好之前都会阻塞</li>
-<li>信道可以是 <strong>带缓冲的</strong>.仅当信道的缓冲区填满后，向其发送数据时才会阻塞。当缓冲区为空时，接受方会阻塞</li>
-<li>接收者可以通过为接收表达式分配第二个参数来测试信道是否被关闭：若没有值可以接收且信道已被关闭，<br>那么在执行完v, ok := &lt;-ch<br>之后 ok 会被设置为 false<br>循环 for i := range c 会不断从信道接收值，直到它被关闭<br><em>注意：</em> 只有<strong>发送者</strong>才能关闭信道，而接收者不能。向一个已经关闭的信道发送数据会引发程序恐慌（panic）。</li>
-</ol>
+<p>已知在数组中的位置a[k]：</p>
+<ul>
+<li>求i=(k+1)/3+1，(k+1:向右偏移一个单位；3：每行3个元素；+1：i从1开始)</li>
+<li>求j=k-2i+3（由k的计算公式可得）</li>
+</ul>
+<h1 id="稀疏矩阵"><a href="#稀疏矩阵" class="headerlink" title="稀疏矩阵"></a>稀疏矩阵</h1><h2 id="三元组顺序表"><a href="#三元组顺序表" class="headerlink" title="三元组顺序表"></a>三元组顺序表</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> i,j</span><br><span class="line">    ElemType e;</span><br><span class="line">&#125;Triple;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    Triple data[MAXSIZE+<span class="number">1</span>];<span class="comment">//data[0]未用</span></span><br><span class="line">    <span class="keyword">int</span> mu,nu,tu;<span class="comment">//矩阵的行数、列数和非零元个数</span></span><br><span class="line">&#125;TSMatrix;</span><br></pre></td></tr></table></figure>
+<h2 id="转置算法"><a href="#转置算法" class="headerlink" title="转置算法"></a>转置算法</h2><p>朴素的想法是双重循环，内层遍历data表，外层遍历每一列。遇到属于外层col列的data[i]时，放到转置矩阵表中。</p>
+<p>因为列转置后为行，a.data以行序为准，所以在a.data中首先遇见的一定是列序中靠前的，转置后也就是T中的正常行序。</p>
+<p>朴素想法的时间复杂度为O(mu*tu)。当tu与mu*nu同数量级（非稀疏）时，该方法复杂度为O(mu*nu<sup>2</sup>)，不适用。</p>
+<p>快速转置引入两个辅助向量。num[col]表示矩阵M中第col列中非零元的个数，cpot[col]指示M中第col列的第一个非零元在b.data(转置后矩阵数据表)中的位置。</p>
+<p>显然要求算cpot函数方法如下：</p>
+<p>$$<br>\begin{cases}<br>cpot[1]=1 &amp; \<br>cpot[col]=cpot[col-1]+num[col-1] &amp; \text{2$\leq$ col$\leq$a.nu}<br>\end{cases}<br>$$</p>
+<p>算法如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Status <span class="title">FastTransposeSmatrix</span><span class="params">(TSMatrix M, TSMatrix &amp;T)</span></span>&#123;</span><br><span class="line">    <span class="comment">//采用三元组顺序表存储表示，求稀疏矩阵M的转置矩阵T</span></span><br><span class="line">    T.mu=M.nu; T.nu=M.mu; T.tu=M.tu;</span><br><span class="line">    <span class="keyword">if</span>(T.tu)&#123;</span><br><span class="line">        <span class="keyword">for</span>(col=<span class="number">1</span>;col&lt;=M.nu;++col) num[col]=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(t=<span class="number">1</span>;t&lt;=M.tu;++t) ++num[M.data[t].j];<span class="comment">//处理num辅助向量</span></span><br><span class="line">        cpot[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//求第col列中第一个非零元在b.data中的序号</span></span><br><span class="line">        <span class="keyword">for</span>(col=<span class="number">2</span>;col&lt;=M.nu;++col) cpot[col]=cpot[col<span class="number">-1</span>]+num[col<span class="number">-1</span>];</span><br><span class="line">        <span class="keyword">for</span>(p=<span class="number">1</span>;p&lt;=M.tu;++p) &#123;</span><br><span class="line">            col=M.data[p].j; q=cpot[col];</span><br><span class="line">            T.data[q].i=M.data[p].j; T.data[q].j=M.data[p].i;</span><br><span class="line">            T.data[q].e=M.data[p].e; ++cpot[col];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总时间复杂度为O(nu+tu)。</p>
 
     </div>
 
@@ -321,21 +312,18 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/go/" rel="tag"><i class="fa fa-tag"></i> go</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/09/17/%E5%9B%BE%E8%A7%A3http-https/" rel="prev" title="图解http/https">
-                  <i class="fa fa-chevron-left"></i> 图解http/https
+                <a href="/2021/10/06/linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" rel="prev" title="linux文件系统">
+                  <i class="fa fa-chevron-left"></i> linux文件系统
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/09/19/MIT6-S081%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/" rel="next" title="MIT6.S081实验记录">
-                  MIT6.S081实验记录 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>

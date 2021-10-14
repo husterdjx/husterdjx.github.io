@@ -131,7 +131,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -142,7 +142,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -184,6 +184,118 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/10/13/%E7%9F%A9%E9%98%B5%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8%E4%B8%8E%E5%BF%AB%E9%80%9F%E8%BD%AC%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="huster-djx">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="huster-DJX">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/10/13/%E7%9F%A9%E9%98%B5%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8%E4%B8%8E%E5%BF%AB%E9%80%9F%E8%BD%AC%E7%BD%AE/" class="post-title-link" itemprop="url">矩阵压缩存储与快速转置</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-13 14:21:06" itemprop="dateCreated datePublished" datetime="2021-10-13T14:21:06+08:00">2021-10-13</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-10-14 13:35:49" itemprop="dateModified" datetime="2021-10-14T13:35:49+08:00">2021-10-14</time>
+      </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <span id="more"></span>
+
+<h1 id="n阶对称矩阵"><a href="#n阶对称矩阵" class="headerlink" title="n阶对称矩阵"></a>n阶对称矩阵</h1><p>将n<sup>2</sup>个元压缩存储到n(n+1)/2个元的空间中。</p>
+<p>现有一维数组ax[ $\frac{i(i-1)}{2}$ ]，则sa[k]和矩阵元a<sub>ij</sub>之间存在的对应关系：<br>$$<br>f(x)=<br>\begin{cases}<br>\frac{i(i-1)}{2}+j-1&amp; \text{i$\geq$j}\<br>\frac{j(j-1)}{2}+i-1&amp; \text{i&lt;j}<br>\end{cases}<br>$$</p>
+<p>sa[$\frac{i(i-1)}{2}$]为n阶对称矩阵A的压缩存储</p>
+<h1 id="三对角矩阵"><a href="#三对角矩阵" class="headerlink" title="三对角矩阵"></a>三对角矩阵</h1><p>按行为顺序进行一维存储</p>
+<p>对于n阶三对角矩阵，元素总数为2+3*(n-2)+2=<strong>3n-2</strong></p>
+<p>已知i,j:</p>
+<ul>
+<li>求在数组中的位置k=2+3*(i-2)+j-i+1=2i+j-3</li>
+</ul>
+<p>已知在数组中的位置a[k]：</p>
+<ul>
+<li>求i=(k+1)/3+1，(k+1:向右偏移一个单位；3：每行3个元素；+1：i从1开始)</li>
+<li>求j=k-2i+3（由k的计算公式可得）</li>
+</ul>
+<h1 id="稀疏矩阵"><a href="#稀疏矩阵" class="headerlink" title="稀疏矩阵"></a>稀疏矩阵</h1><h2 id="三元组顺序表"><a href="#三元组顺序表" class="headerlink" title="三元组顺序表"></a>三元组顺序表</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> i,j</span><br><span class="line">    ElemType e;</span><br><span class="line">&#125;Triple;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    Triple data[MAXSIZE+<span class="number">1</span>];<span class="comment">//data[0]未用</span></span><br><span class="line">    <span class="keyword">int</span> mu,nu,tu;<span class="comment">//矩阵的行数、列数和非零元个数</span></span><br><span class="line">&#125;TSMatrix;</span><br></pre></td></tr></table></figure>
+<h2 id="转置算法"><a href="#转置算法" class="headerlink" title="转置算法"></a>转置算法</h2><p>朴素的想法是双重循环，内层遍历data表，外层遍历每一列。遇到属于外层col列的data[i]时，放到转置矩阵表中。</p>
+<p>因为列转置后为行，a.data以行序为准，所以在a.data中首先遇见的一定是列序中靠前的，转置后也就是T中的正常行序。</p>
+<p>朴素想法的时间复杂度为O(mu*tu)。当tu与mu*nu同数量级（非稀疏）时，该方法复杂度为O(mu*nu<sup>2</sup>)，不适用。</p>
+<p>快速转置引入两个辅助向量。num[col]表示矩阵M中第col列中非零元的个数，cpot[col]指示M中第col列的第一个非零元在b.data(转置后矩阵数据表)中的位置。</p>
+<p>显然要求算cpot函数方法如下：</p>
+<p>$$<br>\begin{cases}<br>cpot[1]=1 &amp; \<br>cpot[col]=cpot[col-1]+num[col-1] &amp; \text{2$\leq$ col$\leq$a.nu}<br>\end{cases}<br>$$</p>
+<p>算法如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Status <span class="title">FastTransposeSmatrix</span><span class="params">(TSMatrix M, TSMatrix &amp;T)</span></span>&#123;</span><br><span class="line">    <span class="comment">//采用三元组顺序表存储表示，求稀疏矩阵M的转置矩阵T</span></span><br><span class="line">    T.mu=M.nu; T.nu=M.mu; T.tu=M.tu;</span><br><span class="line">    <span class="keyword">if</span>(T.tu)&#123;</span><br><span class="line">        <span class="keyword">for</span>(col=<span class="number">1</span>;col&lt;=M.nu;++col) num[col]=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(t=<span class="number">1</span>;t&lt;=M.tu;++t) ++num[M.data[t].j];<span class="comment">//处理num辅助向量</span></span><br><span class="line">        cpot[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//求第col列中第一个非零元在b.data中的序号</span></span><br><span class="line">        <span class="keyword">for</span>(col=<span class="number">2</span>;col&lt;=M.nu;++col) cpot[col]=cpot[col<span class="number">-1</span>]+num[col<span class="number">-1</span>];</span><br><span class="line">        <span class="keyword">for</span>(p=<span class="number">1</span>;p&lt;=M.tu;++p) &#123;</span><br><span class="line">            col=M.data[p].j; q=cpot[col];</span><br><span class="line">            T.data[q].i=M.data[p].j; T.data[q].j=M.data[p].i;</span><br><span class="line">            T.data[q].e=M.data[p].e; ++cpot[col];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总时间复杂度为O(nu+tu)。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -311,7 +423,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-10-01 18:04:05" itemprop="dateModified" datetime="2021-10-01T18:04:05+08:00">2021-10-01</time>
+        <time title="修改时间：2021-10-13 14:22:17" itemprop="dateModified" datetime="2021-10-13T14:22:17+08:00">2021-10-13</time>
       </span>
 
   
@@ -506,7 +618,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-10-07 16:48:11" itemprop="dateModified" datetime="2021-10-07T16:48:11+08:00">2021-10-07</time>
+        <time title="修改时间：2021-10-07 17:52:36" itemprop="dateModified" datetime="2021-10-07T17:52:36+08:00">2021-10-07</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -525,7 +637,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.9k</span>
+      <span>8k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -954,13 +1066,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">19k</span>
+    <span title="站点总字数">21k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">17 分钟</span>
+    <span title="站点阅读时长">19 分钟</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
