@@ -20,28 +20,28 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="这是一篇对hexo基本操作的简单指南">
+<meta name="description" content="有向无环图的应用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://husterdjx.github.io/2021/09/17/hello-world/index.html">
+<meta property="og:title" content="拓扑排序与关键路径">
+<meta property="og:url" content="https://husterdjx.github.io/2021/10/30/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%E4%B8%8E%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84/index.html">
 <meta property="og:site_name" content="huster-DJX">
-<meta property="og:description" content="这是一篇对hexo基本操作的简单指南">
+<meta property="og:description" content="有向无环图的应用">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-09-17T03:09:22.188Z">
-<meta property="article:modified_time" content="2021-09-17T13:41:01.563Z">
+<meta property="article:published_time" content="2021-10-30T02:36:15.000Z">
+<meta property="article:modified_time" content="2021-10-31T06:21:48.129Z">
 <meta property="article:author" content="huster-djx">
-<meta property="article:tag" content="Test">
+<meta property="article:tag" content="图论">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://husterdjx.github.io/2021/09/17/hello-world/">
+<link rel="canonical" href="https://husterdjx.github.io/2021/10/30/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%E4%B8%8E%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/09/17/hello-world/","path":"2021/09/17/hello-world/","title":"Hello World"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/10/30/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%E4%B8%8E%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84/","path":"2021/10/30/拓扑排序与关键路径/","title":"拓扑排序与关键路径"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hello World | huster-DJX</title>
+<title>拓扑排序与关键路径 | huster-DJX</title>
   
 
 
@@ -121,7 +121,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">拓扑排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3"><span class="nav-number">1.1.</span> <span class="nav-text">主要算法思想</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AOV-%E7%BD%91-Activity-On-Vertex-Network"><span class="nav-number">2.</span> <span class="nav-text">AOV-网(Activity On Vertex Network)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOV-%E7%BD%91%E4%B8%8E%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F"><span class="nav-number">2.3.</span> <span class="nav-text">AOV-网与拓扑排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AOE-%E7%BD%91-Activity-On-Edge"><span class="nav-number">3.</span> <span class="nav-text">AOE-网(Activity On Edge)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">3.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84-Critical-Path"><span class="nav-number">3.2.</span> <span class="nav-text">关键路径(Critical Path)</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -200,7 +200,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/09/17/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/10/30/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%E4%B8%8E%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -213,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          拓扑排序与关键路径
         </h1>
 
         <div class="post-meta-container">
@@ -223,10 +223,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2021-09-17 11:09:22 / 修改时间：21:41:01" itemprop="dateCreated datePublished" datetime="2021-09-17T11:09:22+08:00">2021-09-17</time>
+      <time title="创建时间：2021-10-30 10:36:15" itemprop="dateCreated datePublished" datetime="2021-10-30T10:36:15+08:00">2021-10-30</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-10-31 14:21:48" itemprop="dateModified" datetime="2021-10-31T14:21:48+08:00">2021-10-31</time>
+      </span>
 
   
     <span class="post-meta-break"></span>
@@ -235,14 +241,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>385</span>
+      <span>1.8k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>2 分钟</span>
     </span>
 </div>
 
@@ -253,21 +259,31 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>这是一篇对hexo基本操作的简单指南</p>
+        <p>有向无环图的应用</p>
 <span id="more"></span>
-<p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h1 id="拓扑排序"><a href="#拓扑排序" class="headerlink" title="拓扑排序"></a>拓扑排序</h1><p>简单的说，<strong>由某个集合上的一个偏序得到该集合上的一个全序</strong>，这个操作称之为拓扑排序。</p>
+<p>回顾离散数学：</p>
+<p>若集合X上的关系R是自反的、反对称的和传递的，则称R是集合X上的<strong>偏序关系</strong>。</p>
+<p>设R是集合X上的<strong>偏序(Partial Order)<strong>，如果对每个x,y∈X必有xRy或yRx，则称R是集合X上的</strong>全序关系</strong>。这个全序称为<strong>拓扑有序</strong>。</p>
+<h2 id="主要算法思想"><a href="#主要算法思想" class="headerlink" title="主要算法思想"></a>主要算法思想</h2><ol>
+<li>在有向图中选一个没有前驱的顶点且输出</li>
+<li>从图中删除该顶点和所有以它为尾的弧<h1 id="AOV-网-Activity-On-Vertex-Network"><a href="#AOV-网-Activity-On-Vertex-Network" class="headerlink" title="AOV-网(Activity On Vertex Network)"></a>AOV-网(Activity On Vertex Network)</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2>用顶点表示活动，用弧表示活动间的优先关系的有向图<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2>不存在有向环。若存在有向环则意味着某项活动以自己为先决条件，这是不合理的。</li>
+</ol>
+<h2 id="AOV-网与拓扑排序"><a href="#AOV-网与拓扑排序" class="headerlink" title="AOV-网与拓扑排序"></a>AOV-网与拓扑排序</h2><p>对于采用邻接表作为有向图的存储结构，且在头结点中增加一个存放顶点入度的数组(indegree)方便操作。</p>
+<p>同时，为了避免重复检测入度为0的点，可设置一个栈暂存所有入度为0的点。Pop操作对应一次输出和后续的其他相关联的弧的弧头入度减少，Push操作对应的将每次的Pop操作新产生的入度为0的点入栈。这样保证了每次选中输出的点的后续入度减少的操作是在下一次输出之前一定完成，并且下一次选中的点一定是合法点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Status TopologicalSort(ALGraph G)&#123;</span><br><span class="line">	//有向图G采用邻接表存储结构</span><br><span class="line">	//若G无回路，则输出G的顶点的一个拓扑排序并且返回OK，否则ERROR</span><br><span class="line">	FindInDegree(G,indegree);		//对个顶点求入度</span><br><span class="line">	InitStack(S);</span><br><span class="line">	for(i=0; i&lt;G.vexnum; ++i)</span><br><span class="line">		if(!indegree[i]) Push(S,i); //入度为0的入栈</span><br><span class="line">	count=0;			</span><br><span class="line">	while(!StackEmpty(S))&#123;</span><br><span class="line">		Pop(S,i); printf(i,G.vertices[i].data); //一次Pop输出</span><br><span class="line">		++count;</span><br><span class="line">		for(p=G.vertices[i].firstarc; p; p=p-&gt;nextarc)&#123;</span><br><span class="line">			k=p-&gt;adjvex;</span><br><span class="line">			if(!(--indegree[k])) Push(S,k); //若入度更新后为0，入栈</span><br><span class="line">		&#125;	</span><br><span class="line">	&#125;</span><br><span class="line">	if(count&lt;G.vexnum) return ERROR;</span><br><span class="line">	else return OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总的时间复杂度为O(n+e)</p>
+<h1 id="AOE-网-Activity-On-Edge"><a href="#AOE-网-Activity-On-Edge" class="headerlink" title="AOE-网(Activity On Edge)"></a>AOE-网(Activity On Edge)</h1><h2 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h2><p>顶点表示事件，弧表示活动的带权的有向无环图<br>每个事件表示在它之前的活动（所有该事件所代表顶点为弧头的活动）已经完成，在它之后的活动（所有该事件所代表顶点为弧尾的活动）可以开始。</p>
+<p>在无环情况下，网中只有一个入度位零的点（称作源点）和一个出度为零的点（称作汇点）。</p>
+<h2 id="关键路径-Critical-Path"><a href="#关键路径-Critical-Path" class="headerlink" title="关键路径(Critical Path)"></a>关键路径(Critical Path)</h2><p>从开始点到完成点的最长路径叫做<strong>关键路径</strong>。</p>
+<p>假设开始点为v<sub>1</sub>，从v<sub>1</sub>到v<sub>i</sub>的最长路径长度叫做<strong>事件v<sub>i</sub><strong>的</strong>最早发生时间</strong>。这个时间决定了所有以v<sub>i</sub>为尾的弧所表示的<strong>活动</strong>的<strong>最早开始时间</strong>。用e(i)表示活动a<sub>i</sub>的最早开始时间。类似的，用l(i)定义活动a<sub>i</sub>的最迟开始时间（不推迟整个工程完成的前提下，活动a<sub>i</sub>的最迟要开始的时间）。我们把l(i)=e(i)的活动叫做<strong>关键活动</strong>。</p>
+<p>显然，关键路径上的所有活动都是关键活动。</p>
+<p>为了求得AOE-网中活动的e(i)和l(i)，应先求得事件（顶点）的最早发生时间ve(j)和最迟发生时间vl(j)。假设活动a<sub>i</sub>由弧&lt;j,k&gt;表示，其持续时间记为dut(&lt;j,k&gt;)，则有<br>$$<br>\begin{cases}<br>e(i)=ve(j)\<br>l(i)=vl(k)-dut(&lt;j,k&gt;)<br>\end{cases}<br>$$<br>问题转化为求ve(j)和vl(j)，需要分两步进行:</p>
+<ol>
+<li>从ve(0)=0开始向前递推：ve(j)=Max{ve(i)+dut(&lt;i,j&gt;)} &lt;i,j&gt;∈T，j=1,2,···n-1（其中T是所有以第j个顶点为头的弧的集合）</li>
+<li>从vl(n-1)=ve(n-1)起向后递推：vl(i)=Min{vl(j)-dut(&lt;i,j&gt;)} &lt;i,j&gt;∈S，i=n-2,···,0（其中S是所有以第i个顶点为尾的弧的集合）</li>
+</ol>
+<p>贴针对AOE-网的代码：</p>
 
     </div>
 
@@ -294,20 +310,20 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/Test/" rel="tag"><i class="fa fa-tag"></i> Test</a>
+              <a href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag"><i class="fa fa-tag"></i> 图论</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/09/17/Start/" rel="prev" title="Start">
-                  <i class="fa fa-chevron-left"></i> Start
+                <a href="/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/" rel="prev" title="最小生成树">
+                  <i class="fa fa-chevron-left"></i> 最小生成树
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/09/17/%E5%9B%BE%E8%A7%A3http-https/" rel="next" title="图解http/https">
-                  图解http/https <i class="fa fa-chevron-right"></i>
+                <a href="/2021/11/24/golang-%E5%8C%85/" rel="next" title="golang-包">
+                  golang-包 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>

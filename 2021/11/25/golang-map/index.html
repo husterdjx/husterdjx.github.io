@@ -20,28 +20,28 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="这是一篇对hexo基本操作的简单指南">
+<meta name="description" content="Go语言存储键值对的无序集合">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://husterdjx.github.io/2021/09/17/hello-world/index.html">
+<meta property="og:title" content="golang-map">
+<meta property="og:url" content="https://husterdjx.github.io/2021/11/25/golang-map/index.html">
 <meta property="og:site_name" content="huster-DJX">
-<meta property="og:description" content="这是一篇对hexo基本操作的简单指南">
+<meta property="og:description" content="Go语言存储键值对的无序集合">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-09-17T03:09:22.188Z">
-<meta property="article:modified_time" content="2021-09-17T13:41:01.563Z">
+<meta property="article:published_time" content="2021-11-25T08:12:40.000Z">
+<meta property="article:modified_time" content="2021-11-25T10:29:27.819Z">
 <meta property="article:author" content="huster-djx">
-<meta property="article:tag" content="Test">
+<meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://husterdjx.github.io/2021/09/17/hello-world/">
+<link rel="canonical" href="https://husterdjx.github.io/2021/11/25/golang-map/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/09/17/hello-world/","path":"2021/09/17/hello-world/","title":"Hello World"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/11/25/golang-map/","path":"2021/11/25/golang-map/","title":"golang-map"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hello World | huster-DJX</title>
+<title>golang-map | huster-DJX</title>
   
 
 
@@ -121,7 +121,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96"><span class="nav-number">1.2.</span> <span class="nav-text">获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3"><span class="nav-number">1.3.</span> <span class="nav-text">迭代</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-number">1.4.</span> <span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%A0%E5%8F%82%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">传参特性</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -200,7 +200,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/09/17/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/11/25/golang-map/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -213,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          golang-map
         </h1>
 
         <div class="post-meta-container">
@@ -225,7 +225,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-09-17 11:09:22 / 修改时间：21:41:01" itemprop="dateCreated datePublished" datetime="2021-09-17T11:09:22+08:00">2021-09-17</time>
+      <time title="创建时间：2021-11-25 16:12:40 / 修改时间：18:29:27" itemprop="dateCreated datePublished" datetime="2021-11-25T16:12:40+08:00">2021-11-25</time>
     </span>
 
   
@@ -235,7 +235,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>385</span>
+      <span>630</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -253,21 +253,19 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>这是一篇对hexo基本操作的简单指南</p>
+        <p>Go语言存储键值对的无序集合</p>
 <span id="more"></span>
-<p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dict := make(map[string]int) </span><br><span class="line">dict := map[string]string &#123;&#125; //以上两种都是创建空映射(不同于nil映射，空映射可以存储键值对)</span><br><span class="line"></span><br><span class="line">var colors map[string]string //创建nil映射，不能用于存储键值对</span><br><span class="line">dict := map[string]string&#123;&quot;Red&quot;: &quot;123&quot;, &quot;Orange&quot;:&quot;234&quot;&#125; </span><br></pre></td></tr></table></figure>
+<p>映射的<strong>键</strong>不能具有引用语义：切片、函数和包含切片的结构类型</p>
+<h2 id="获取"><a href="#获取" class="headerlink" title="获取"></a>获取</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">value, exists := colors[&quot;Blue&quot;]</span><br></pre></td></tr></table></figure>
+<p>如果映射存储的值都是非零值，可以用以下方法检查是否存在</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">value := colors[&quot;Blue&quot;]</span><br><span class="line">if value != &quot;&quot;&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Go语言中如果键不存在，则会返回映射的<strong>值的类型</strong>的零值（map[int]string返回””）</p>
+<h2 id="迭代"><a href="#迭代" class="headerlink" title="迭代"></a>迭代</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for key, value := range colors &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete(colors, &quot;&#123;键值&#125;&quot;)</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h1 id="传参特性"><a href="#传参特性" class="headerlink" title="传参特性"></a>传参特性</h1><p>函数间传递映射不会制造额外副本，所以函数对映射做出修改时，所有对这个映射的引用都会察觉到这个修改（映射为引用类型）</p>
 
     </div>
 
@@ -294,21 +292,18 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/Test/" rel="tag"><i class="fa fa-tag"></i> Test</a>
+              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/09/17/Start/" rel="prev" title="Start">
-                  <i class="fa fa-chevron-left"></i> Start
+                <a href="/2021/11/24/golang-%E5%8C%85/" rel="prev" title="golang-包">
+                  <i class="fa fa-chevron-left"></i> golang-包
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/09/17/%E5%9B%BE%E8%A7%A3http-https/" rel="next" title="图解http/https">
-                  图解http/https <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
