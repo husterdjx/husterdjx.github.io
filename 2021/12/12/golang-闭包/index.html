@@ -20,23 +20,28 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta property="og:type" content="website">
-<meta property="og:title" content="huster-DJX">
-<meta property="og:url" content="https://husterdjx.github.io/tags/Linux/index.html">
+<meta name="description" content="有捕获列表的function value">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang-闭包">
+<meta property="og:url" content="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/index.html">
 <meta property="og:site_name" content="huster-DJX">
+<meta property="og:description" content="有捕获列表的function value">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-12T06:56:50.000Z">
+<meta property="article:modified_time" content="2021-12-12T07:03:54.465Z">
 <meta property="article:author" content="huster-djx">
+<meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://husterdjx.github.io/tags/Linux/">
+<link rel="canonical" href="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"tags/Linux/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/","path":"2021/12/12/golang-闭包/","title":"golang-闭包"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>标签: Linux | huster-DJX</title>
+<title>golang-闭包 | huster-DJX</title>
   
 
 
@@ -183,50 +188,124 @@
 </noscript>
 
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">Linux
-          <small>标签</small>
-        </h2>
-      </div>
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="huster-djx">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="huster-DJX">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          golang-闭包
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+
+      <time title="创建时间：2021-12-12 14:56:50 / 修改时间：15:03:54" itemprop="dateCreated datePublished" datetime="2021-12-12T14:56:50+08:00">2021-12-12</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>86</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>有捕获列表的function value</p>
+<span id="more"></span>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ma4y1e7R5?spm_id_from=333.999.0.0">https://www.bilibili.com/video/BV1ma4y1e7R5?spm_id_from=333.999.0.0</a></p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2021-10-06T10:39:32+08:00"
-              content="2021-10-06">
-          10-06
-        </time>
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/images/wechat_channel.png">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
       </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/10/06/linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" itemprop="url">
-            <span itemprop="name">linux文件系统</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-    </div>
   </div>
-  
-  
-  
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/12/09/%E5%B8%B8%E7%94%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="prev" title="常用排序算法">
+                  <i class="fa fa-chevron-left"></i> 常用排序算法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/12/13/%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0/" rel="next" title="接口型函数">
+                  接口型函数 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
 
 </div>
   </main>
