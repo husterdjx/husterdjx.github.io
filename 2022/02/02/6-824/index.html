@@ -20,31 +20,31 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="Prim与Kruskal">
+<meta name="description" content="初探分布式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="最小生成树">
-<meta property="og:url" content="https://husterdjx.github.io/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/index.html">
+<meta property="og:title" content="6.824">
+<meta property="og:url" content="https://husterdjx.github.io/2022/02/02/6-824/index.html">
 <meta property="og:site_name" content="huster-DJX">
-<meta property="og:description" content="Prim与Kruskal">
+<meta property="og:description" content="初探分布式">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://husterdjx.github.io/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/prim.png">
-<meta property="og:image" content="https://husterdjx.github.io/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/kruskal.png">
-<meta property="article:published_time" content="2021-10-29T11:31:57.000Z">
-<meta property="article:modified_time" content="2022-01-01T01:25:35.648Z">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/02/6-824/mapreduce.png">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/02/6-824/%E6%80%BB%E7%BB%93.PNG">
+<meta property="article:published_time" content="2022-02-02T14:02:29.000Z">
+<meta property="article:modified_time" content="2022-02-05T11:29:25.545Z">
 <meta property="article:author" content="huster-djx">
-<meta property="article:tag" content="树">
+<meta property="article:tag" content="分布式">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://husterdjx.github.io/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/prim.png">
+<meta name="twitter:image" content="https://husterdjx.github.io/2022/02/02/6-824/mapreduce.png">
 
 
-<link rel="canonical" href="https://husterdjx.github.io/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/">
+<link rel="canonical" href="https://husterdjx.github.io/2022/02/02/6-824/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/","path":"2021/10/29/最小生成树/","title":"最小生成树"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2022/02/02/6-824/","path":"2022/02/02/6-824/","title":"6.824"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>最小生成树 | huster-DJX</title>
+<title>6.824 | huster-DJX</title>
   
 
 
@@ -124,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MST%E6%80%A7%E8%B4%A8"><span class="nav-number">1.</span> <span class="nav-text">MST性质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prim%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">Prim算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E6%83%B3"><span class="nav-number">2.1.</span> <span class="nav-text">思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">2.2.</span> <span class="nav-text">时间复杂度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kruskal%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">Kruskal算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E6%83%B3-1"><span class="nav-number">3.1.</span> <span class="nav-text">思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6-1"><span class="nav-number">3.2.</span> <span class="nav-text">时间复杂度</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E5%92%8C%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">RPC和线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce"><span class="nav-number"></span> <span class="nav-text">MapReduce</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">工作流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lab%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Lab实现流程</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -203,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2022/02/02/6-824/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -216,7 +216,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          最小生成树
+          6.824
         </h1>
 
         <div class="post-meta-container">
@@ -227,14 +227,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-10-29 19:31:57" itemprop="dateCreated datePublished" datetime="2021-10-29T19:31:57+08:00">2021-10-29</time>
+      <time title="创建时间：2022-02-02 22:02:29" itemprop="dateCreated datePublished" datetime="2022-02-02T22:02:29+08:00">2022-02-02</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-01-01 09:25:35" itemprop="dateModified" datetime="2022-01-01T09:25:35+08:00">2022-01-01</time>
+        <time title="修改时间：2022-02-05 19:29:25" itemprop="dateModified" datetime="2022-02-05T19:29:25+08:00">2022-02-05</time>
       </span>
 
   
@@ -244,14 +244,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>191</span>
+      <span>2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>2 分钟</span>
     </span>
 </div>
 
@@ -262,15 +262,44 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>Prim与Kruskal</p>
+        <p>初探分布式</p>
 <span id="more"></span>
+<h2 id="RPC和线程"><a href="#RPC和线程" class="headerlink" title="RPC和线程"></a>RPC和线程</h2><p>线程-&gt;独立的栈、程序计数器和寄存器</p>
+<h1 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h1><h2 id="工作流程图"><a href="#工作流程图" class="headerlink" title="工作流程图"></a>工作流程图</h2><img src="/2022/02/02/6-824/mapreduce.png" class="" title="[mapreduce流程]">
 
-<h1 id="MST性质"><a href="#MST性质" class="headerlink" title="MST性质"></a>MST性质</h1><p>假设N=(V,{E})是一个连通网，U是顶点集V的一个非空子集。若(u,v)是一条具有最小权值的边，其中u∈U，v∈V-U，则比存在一棵包含边(u,v)的最小生成树。</p>
-<h1 id="Prim算法"><a href="#Prim算法" class="headerlink" title="Prim算法"></a>Prim算法</h1><h2 id="思想"><a href="#思想" class="headerlink" title="思想"></a>思想</h2><img src="/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/prim.png" class="" title="[prim算法描述]">
-<p>(节选自百度百科)</p>
-<h2 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>O(n<sup>2</sup>)<br>适用于求边稠密的网的最小生成树</p>
-<h1 id="Kruskal算法"><a href="#Kruskal算法" class="headerlink" title="Kruskal算法"></a>Kruskal算法</h1><h2 id="思想-1"><a href="#思想-1" class="headerlink" title="思想"></a>思想</h2><img src="/2021/10/29/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/kruskal.png" class="" title="[kruskal算法描述]">
-<h2 id="时间复杂度-1"><a href="#时间复杂度-1" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><p>O(eloge)<br>其中e位网中边的数目<br>适用于求边稀疏的网的最小生成树</p>
+<h2 id="Lab实现流程"><a href="#Lab实现流程" class="headerlink" title="Lab实现流程"></a>Lab实现流程</h2><img src="/2022/02/02/6-824/%E6%80%BB%E7%BB%93.PNG" class="" title="[Lab1流程]">
+
+<p>值得注意的几点：</p>
+<ul>
+<li><p>Coordinator:</p>
+<ol>
+<li><p>需要维护的状态：</p>
+<p>基础配置信息，包括 总 MAP Task 数量、总 Reduce Task 数量<br>调度所需信息，包括当前所处阶段，是 MAP 还是 REDUCE</p>
+<p>所有仍未完成的 Task 及其所属的 Worker 和 Deadline（若有），使用 Golang Map 结构实现</p>
+<p>所有仍未分配的 Task 池，用于响应 Worker 的申请及 Failover 时的重新分配，使用 Golang Channel 实现</p>
+</li>
+<li><p>启动goroutinue来定时清理失败的task，重新放入Task池并清除worker标记</p>
+</li>
+<li><p>rename过程相当于commit了成功的Task，确保在出现崩溃时没有人观察到部分写入的文件</p>
+</li>
+<li><p>锁的获取与释放保证对Coordinator的共享数据结构的并发安全</p>
+</li>
+</ol>
+</li>
+<li><p>Worker</p>
+<ol>
+<li><p>通过Coordinator的调度信息来决定行为</p>
+</li>
+<li><p>利用RPC主动向Coordinator请求任务/通信</p>
+<p>其中RPC相关的代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// send an RPC request to the coordinator, wait for the response.</span></span><br><span class="line"><span class="comment">// usually returns true.</span></span><br><span class="line"><span class="comment">// returns false if something goes wrong.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">call</span><span class="params">(rpcname <span class="keyword">string</span>, args <span class="keyword">interface</span>&#123;&#125;, reply <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="comment">// c, err := rpc.DialHTTP(&quot;tcp&quot;, &quot;127.0.0.1&quot;+&quot;:1234&quot;)</span></span><br><span class="line">	sockname := coordinatorSock()</span><br><span class="line">	c, err := rpc.DialHTTP(<span class="string">&quot;unix&quot;</span>, sockname)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">&quot;dialing:&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> c.Close()</span><br><span class="line"></span><br><span class="line">	err = c.Call(rpcname, args, reply)</span><br><span class="line">	<span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(err)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Cook up a unique-ish UNIX-domain socket name</span></span><br><span class="line"><span class="comment">// in /var/tmp, for the coordinator.</span></span><br><span class="line"><span class="comment">// Can&#x27;t use the current directory since</span></span><br><span class="line"><span class="comment">// Athena AFS doesn&#x27;t support UNIX-domain sockets.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">coordinatorSock</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	s := <span class="string">&quot;/var/tmp/824-mr-&quot;</span></span><br><span class="line">	s += strconv.Itoa(os.Getuid())</span><br><span class="line">	<span class="keyword">return</span> s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// example function to show how to make an RPC call to the coordinator.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// the RPC argument and reply types are defined in rpc.go.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CallExample</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// declare an argument structure.</span></span><br><span class="line">	args := ExampleArgs&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// fill in the argument(s).</span></span><br><span class="line">	args.X = <span class="number">99</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// declare a reply structure.</span></span><br><span class="line">	reply := ExampleReply&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// send the RPC request, wait for the reply.</span></span><br><span class="line">	<span class="comment">// the &quot;Coordinator.Example&quot; tells the</span></span><br><span class="line">	<span class="comment">// receiving server that we&#x27;d like to call</span></span><br><span class="line">	<span class="comment">// the Example() method of struct Coordinator.</span></span><br><span class="line">	ok := call(<span class="string">&quot;Coordinator.Example&quot;</span>, &amp;args, &amp;reply) <span class="comment">//change here for handler</span></span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		<span class="comment">// reply.Y should be 100.</span></span><br><span class="line">		fmt.Printf(<span class="string">&quot;reply.Y %v\n&quot;</span>, reply.Y)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;call failed!\n&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>单机多进程的实现，并未实现多机分布式版本</p>
+</li>
+</ul>
 
     </div>
 
@@ -297,21 +326,18 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/%E6%A0%91/" rel="tag"><i class="fa fa-tag"></i> 树</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 分布式</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/10/13/%E7%9F%A9%E9%98%B5%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8%E4%B8%8E%E5%BF%AB%E9%80%9F%E8%BD%AC%E7%BD%AE/" rel="prev" title="矩阵压缩存储与快速转置">
-                  <i class="fa fa-chevron-left"></i> 矩阵压缩存储与快速转置
+                <a href="/2021/12/31/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" rel="prev" title="2021年终总结">
+                  <i class="fa fa-chevron-left"></i> 2021年终总结
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/10/30/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F%E4%B8%8E%E5%85%B3%E9%94%AE%E8%B7%AF%E5%BE%84/" rel="next" title="拓扑排序与关键路径">
-                  拓扑排序与关键路径 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
