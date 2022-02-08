@@ -31,8 +31,9 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/02/6-824/%E6%80%BB%E7%BB%93.PNG">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/02/6-824/gfs1.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/02/6-824/GFS%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE.png">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/02/6-824/VMwareFT.png">
 <meta property="article:published_time" content="2022-02-02T14:02:29.000Z">
-<meta property="article:modified_time" content="2022-02-06T11:08:43.259Z">
+<meta property="article:modified_time" content="2022-02-08T15:17:55.335Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="分布式">
 <meta name="twitter:card" content="summary">
@@ -126,7 +127,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E5%92%8C%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">RPC和线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce"><span class="nav-number"></span> <span class="nav-text">MapReduce</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">工作流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lab%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Lab实现流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFS"><span class="nav-number"></span> <span class="nav-text">GFS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E9%9A%BE%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">分布式存储的难点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GFS%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">GFS流程</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E5%92%8C%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">RPC和线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce"><span class="nav-number"></span> <span class="nav-text">MapReduce</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">工作流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lab%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Lab实现流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFS"><span class="nav-number"></span> <span class="nav-text">GFS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E9%9A%BE%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">分布式存储的难点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GFS%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">GFS流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware-FT"><span class="nav-number"></span> <span class="nav-text">VMware FT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E4%B8%AD%E5%AE%9E%E7%8E%B0%E5%A4%8D%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">集群中实现复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E7%82%B9%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">要点图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E7%BB%86%E8%8A%82"><span class="nav-number">3.</span> <span class="nav-text">设计细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log-Channel"><span class="nav-number">3.1.</span> <span class="nav-text">Log Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%8E%A7%E5%88%B6"><span class="nav-number">3.2.</span> <span class="nav-text">输出控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E8%BE%93%E5%87%BA"><span class="nav-number">3.3.</span> <span class="nav-text">重复输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E5%9F%9F%E7%BD%91%E4%B8%AD%E7%9A%84%E5%BD%A2%E5%BC%8F"><span class="nav-number">3.4.</span> <span class="nav-text">局域网中的形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bounce-Buffer"><span class="nav-number">3.5.</span> <span class="nav-text">Bounce Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Test-and-Set"><span class="nav-number">3.6.</span> <span class="nav-text">Test-and-Set</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFS%E4%B8%8EVMware-FT%E7%9A%84Fault-Tolerance%E6%AF%94%E8%BE%83"><span class="nav-number"></span> <span class="nav-text">GFS与VMware FT的Fault-Tolerance比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Raft"><span class="nav-number"></span> <span class="nav-text">Raft</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E7%BB%86%E8%8A%82-1"><span class="nav-number">1.</span> <span class="nav-text">设计细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log%E5%90%8C%E6%AD%A5%E6%97%B6%E5%BA%8F"><span class="nav-number">1.1.</span> <span class="nav-text">Log同步时序</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -236,7 +237,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-02-06 19:08:43" itemprop="dateModified" datetime="2022-02-06T19:08:43+08:00">2022-02-06</time>
+        <time title="修改时间：2022-02-08 23:17:55" itemprop="dateModified" datetime="2022-02-08T23:17:55+08:00">2022-02-08</time>
       </span>
 
   
@@ -246,14 +247,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.2k</span>
+      <span>4.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>4 分钟</span>
     </span>
 </div>
 
@@ -313,6 +314,36 @@
 
 <img src="/2022/02/02/6-824/GFS%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE.png" class="" title="[GFS思维导图]">
 
+<h1 id="VMware-FT"><a href="#VMware-FT" class="headerlink" title="VMware FT"></a>VMware FT</h1><h2 id="集群中实现复制"><a href="#集群中实现复制" class="headerlink" title="集群中实现复制"></a>集群中实现复制</h2><ul>
+<li><p>**状态转移(State Transfer)**：主机(Primary)将自己所有的状态，拷贝并发送给备机(Backup)，一般是增量备份；</p>
+</li>
+<li><p>**复制状态机(Replicated State Machine)**：将备机视为一个确定的状态机——client 发送操作到主机，主机按顺序发送到备机，所有备机执行所有的操作，如果从同一起始状态，以相同的顺序输入相同的操作，它们的输出将是相同的。</p>
+<p>VMware FT 使用了<strong>复制状态机</strong>的方法。</p>
+<p>状态转移传输的可能是内存，而复制状态机传输来自客户端的操作或者其他外部事件，人们倾向于使用复制状态机的原因是，<strong>外部操作或事件通常比服务的内存状态要小</strong>。</p>
+</li>
+</ul>
+<h2 id="要点图"><a href="#要点图" class="headerlink" title="要点图"></a>要点图</h2><img src="/2022/02/02/6-824/VMwareFT.png" class="" title="[VMware FT]">
+
+<h2 id="设计细节"><a href="#设计细节" class="headerlink" title="设计细节"></a>设计细节</h2><h3 id="Log-Channel"><a href="#Log-Channel" class="headerlink" title="Log Channel"></a>Log Channel</h3><p>Primary到Backup之间同步的数据流的通道。</p>
+<p>系统维护一个来自于Primary的Log条目的等待缓冲区，如果缓冲区为空，Backup不允许执行指令。如果缓冲区不为空，会强制Backup虚机最多执行指令到这个位置。所以Backup总是落后于Primary至少一个Log。</p>
+<p>如果Primary崩溃，那么Backup在接管Primary前会执行完缓冲区的所有Log以保持同步。</p>
+<p>最小化主机日志缓冲写满：</p>
+<ol>
+<li>建议日志通道带宽 1Gbit/s</li>
+<li>当备机远远落后时（根据论文中的说法，落后超过1秒），可以减缓主机的执行速度。通过减少主机的 CPU 资源来减慢速度</li>
+</ol>
+<h3 id="输出控制"><a href="#输出控制" class="headerlink" title="输出控制"></a>输出控制</h3><p>Primary的VMM会等到之前的Log条目都被Backup虚机确认收到了才将输出转发给客户端。包含了客户端输入的Log条目会从Primary的VMM送到Backup的VMM，Backup的VMM不用等到Backup虚机实际执行这个输入，就会发送一个表明收到了这条Log的ACK报文给Primary的VMM。当Primary的VMM收到了这个ACK，才会将Primary虚机生成的输出转发到网络中。</p>
+<h3 id="重复输出"><a href="#重复输出" class="headerlink" title="重复输出"></a>重复输出</h3><p>当出现主从切换时，切换的两边都有可能生成重复的输出，这意味着，某种程度上来说，所有复制系统的客户端需要一种重复检测机制。这里我们使用的是TCP来完成重复检测。</p>
+<p>当Backup生成回复报文时，这个报文的TCP序列号与之前Primary生成报文的TCP序列号是一样的，这样客户端的TCP栈会发现这是一个重复的报文，它会在TCP层面丢弃这个重复的报文，用户层的软件永远也看不到这里的重复。</p>
+<h3 id="局域网中的形式"><a href="#局域网中的形式" class="headerlink" title="局域网中的形式"></a>局域网中的形式</h3><p>早期的VMware虚机都是直接以VLAN或者Flat形式，通过DVS接入到物理网络，所以虚拟机的报文与物理机无关，可以直接在局域网发送。以太网交换机会维护MAC地址表，表明MAC地址与交换机端口的对应，因为<strong>Primary和Backup虚机的MAC地址一样</strong>，当主从切换时，这个表需要更新，这样同一个目的MAC地址，切换前是发往了Primary虚机所在的物理服务器对应的<strong>交换机端口</strong>，切换之后是发往了Backup虚机所在的物理服务器对应的交换机端口。交换机MAC地址表的切换通常通过虚机主动发起GARP来更新。</p>
+<h3 id="Bounce-Buffer"><a href="#Bounce-Buffer" class="headerlink" title="Bounce Buffer"></a>Bounce Buffer</h3><p>一个和磁盘操作正在访问的内存大小一致的临时缓冲。</p>
+<p>磁盘读操作被修改为在 bounce buffer 中读取特定数据，并且数据仅在IO操作完成并传递完成的时候拷贝到虚拟机内存。类似的，对于磁盘写操作，将要被发送的数据会先拷贝到 bounce buffer，磁盘写操作修改为写数据到 bounce buffer。</p>
+<p>物理服务器的网卡会将网络数据包拷贝给VMM的内存，之后，网卡中断会送给VMM。这时VMM会暂停Primary虚机，记住当前的指令序号，将整个网络数据包拷贝给Primary虚机的内存，之后模拟一个网卡中断发送给Primary虚机。同时，将网络数据包和指令序号发送给Backup。Backup虚机的VMM也会在对应的指令序号暂停Backup虚机，将网络数据包拷贝给Backup虚机，之后在相同的指令序号位置模拟一个网卡中断发送给Backup虚机。</p>
+<h3 id="Test-and-Set"><a href="#Test-and-Set" class="headerlink" title="Test-and-Set"></a>Test-and-Set</h3><p>避免Split Brain。每次涉及到主从切换，都需要向Test-and-Set服务进行查询。</p>
+<p>Test-and-Set服务<strong>不</strong>运行在Primary和Backup的物理服务器上，VMware FT需要通过网络支持Test-and-Set服务。这个服务会在内存中保留一些标志位，当向它发送一个Test-and-Set请求，它会设置标志位，并且返回旧的值。Primary和Backup都需要获取Test-and-Set标志位。为了能够上线，它们或许会同时发送一个Test-and-Set请求，给Test-and-Set服务。当第一个请求送达时，Test-and-Set服务会说，这个标志位之前是0，现在是1。第二个请求送达时，Test-and-Set服务会说，标志位已经是1了，你不允许成为Primary。</p>
+<h1 id="GFS与VMware-FT的Fault-Tolerance比较"><a href="#GFS与VMware-FT的Fault-Tolerance比较" class="headerlink" title="GFS与VMware FT的Fault-Tolerance比较"></a>GFS与VMware FT的Fault-Tolerance比较</h1><p>FT 提供<strong>计算</strong>容错，你能用它为任何已有的网络服务器提供容错性。FT 提供了相当严格的一致性而且对客户端和服务器都是透明的。例如，你可以将 FT 应用于一个已有的邮件服务器并为其提供容错性。</p>
+<p>GFS 只提供<strong>存储</strong>容错，因为 GFS 只针对特定的简单服务(存储)提供容错性，它的备份策略会比 FT 更高效。例如，GFS 不需要使中断都以完全相同的指令发生在所有的副本上。GFS 通常只会用于一个对外提供完整容错服务的系统的一部分。例如，VMware FT 本身也依赖了一个在主备机间共享的有容错性的存储服务，而你则可以用类似于 GFS 的东西来实现这个共享存储（虽然从细节上来讲 GFS 不太适用于 FT）。</p>
+<h1 id="Raft"><a href="#Raft" class="headerlink" title="Raft"></a>Raft</h1><h2 id="设计细节-1"><a href="#设计细节-1" class="headerlink" title="设计细节"></a>设计细节</h2><h3 id="Log同步时序"><a href="#Log同步时序" class="headerlink" title="Log同步时序"></a>Log同步时序</h3>
     </div>
 
     
@@ -381,13 +412,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">50k</span>
+    <span title="站点总字数">53k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">46 分钟</span>
+    <span title="站点阅读时长">48 分钟</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
