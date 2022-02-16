@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/02/6-824/serverstate.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/02/6-824/term.png">
 <meta property="article:published_time" content="2022-02-02T14:02:29.000Z">
-<meta property="article:modified_time" content="2022-02-09T12:28:51.742Z">
+<meta property="article:modified_time" content="2022-02-15T14:59:01.631Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="分布式">
 <meta name="twitter:card" content="summary">
@@ -129,7 +129,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E5%92%8C%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">RPC和线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce"><span class="nav-number"></span> <span class="nav-text">MapReduce</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">工作流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lab%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Lab实现流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFS"><span class="nav-number"></span> <span class="nav-text">GFS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E9%9A%BE%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">分布式存储的难点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GFS%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">GFS流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware-FT"><span class="nav-number"></span> <span class="nav-text">VMware FT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E4%B8%AD%E5%AE%9E%E7%8E%B0%E5%A4%8D%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">集群中实现复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E7%82%B9%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">要点图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E7%BB%86%E8%8A%82"><span class="nav-number">3.</span> <span class="nav-text">设计细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log-Channel"><span class="nav-number">3.1.</span> <span class="nav-text">Log Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%8E%A7%E5%88%B6"><span class="nav-number">3.2.</span> <span class="nav-text">输出控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E8%BE%93%E5%87%BA"><span class="nav-number">3.3.</span> <span class="nav-text">重复输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E5%9F%9F%E7%BD%91%E4%B8%AD%E7%9A%84%E5%BD%A2%E5%BC%8F"><span class="nav-number">3.4.</span> <span class="nav-text">局域网中的形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bounce-Buffer"><span class="nav-number">3.5.</span> <span class="nav-text">Bounce Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Test-and-Set"><span class="nav-number">3.6.</span> <span class="nav-text">Test-and-Set</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFS%E4%B8%8EVMware-FT%E7%9A%84Fault-Tolerance%E6%AF%94%E8%BE%83"><span class="nav-number"></span> <span class="nav-text">GFS与VMware FT的Fault-Tolerance比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Raft"><span class="nav-number"></span> <span class="nav-text">Raft</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E7%BB%86%E8%8A%82-1"><span class="nav-number">1.</span> <span class="nav-text">设计细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log"><span class="nav-number">1.1.</span> <span class="nav-text">Log</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E6%97%B6%E5%BA%8F"><span class="nav-number">1.1.1.</span> <span class="nav-text">同步时序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Log-replication"><span class="nav-number">1.1.2.</span> <span class="nav-text">Log replication</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Leader%E9%80%89%E4%B8%BE"><span class="nav-number">1.2.</span> <span class="nav-text">Leader选举</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E4%B8%BE%E9%99%90%E5%88%B6"><span class="nav-number">1.2.1.</span> <span class="nav-text">选举限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E8%A7%84%E5%88%99"><span class="nav-number">1.2.2.</span> <span class="nav-text">提交规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Term"><span class="nav-number">1.2.3.</span> <span class="nav-text">Term</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E4%B8%BE%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">1.2.4.</span> <span class="nav-text">选举定时器</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC%E5%92%8C%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">RPC和线程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce"><span class="nav-number"></span> <span class="nav-text">MapReduce</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">工作流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lab%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Lab实现流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFS"><span class="nav-number"></span> <span class="nav-text">GFS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E9%9A%BE%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">分布式存储的难点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GFS%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">GFS流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware-FT"><span class="nav-number"></span> <span class="nav-text">VMware FT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E7%BE%A4%E4%B8%AD%E5%AE%9E%E7%8E%B0%E5%A4%8D%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">集群中实现复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E7%82%B9%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">要点图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E7%BB%86%E8%8A%82"><span class="nav-number">3.</span> <span class="nav-text">设计细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log-Channel"><span class="nav-number">3.1.</span> <span class="nav-text">Log Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%8E%A7%E5%88%B6"><span class="nav-number">3.2.</span> <span class="nav-text">输出控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E8%BE%93%E5%87%BA"><span class="nav-number">3.3.</span> <span class="nav-text">重复输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E5%9F%9F%E7%BD%91%E4%B8%AD%E7%9A%84%E5%BD%A2%E5%BC%8F"><span class="nav-number">3.4.</span> <span class="nav-text">局域网中的形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bounce-Buffer"><span class="nav-number">3.5.</span> <span class="nav-text">Bounce Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Test-and-Set"><span class="nav-number">3.6.</span> <span class="nav-text">Test-and-Set</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFS%E4%B8%8EVMware-FT%E7%9A%84Fault-Tolerance%E6%AF%94%E8%BE%83"><span class="nav-number"></span> <span class="nav-text">GFS与VMware FT的Fault-Tolerance比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Raft"><span class="nav-number"></span> <span class="nav-text">Raft</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E7%BB%86%E8%8A%82-1"><span class="nav-number">1.</span> <span class="nav-text">设计细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log"><span class="nav-number">1.1.</span> <span class="nav-text">Log</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E6%97%B6%E5%BA%8F"><span class="nav-number">1.1.1.</span> <span class="nav-text">同步时序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Log-replication"><span class="nav-number">1.1.2.</span> <span class="nav-text">Log replication</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Leader%E9%80%89%E4%B8%BE"><span class="nav-number">1.2.</span> <span class="nav-text">Leader选举</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E4%B8%BE%E9%99%90%E5%88%B6"><span class="nav-number">1.2.1.</span> <span class="nav-text">选举限制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E8%A7%84%E5%88%99"><span class="nav-number">1.2.2.</span> <span class="nav-text">提交规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Term"><span class="nav-number">1.2.3.</span> <span class="nav-text">Term</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%89%E4%B8%BE%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">1.2.4.</span> <span class="nav-text">选举定时器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lab2B"><span class="nav-number">2.</span> <span class="nav-text">Lab2B</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -239,7 +239,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-02-09 20:28:51" itemprop="dateModified" datetime="2022-02-09T20:28:51+08:00">2022-02-09</time>
+        <time title="修改时间：2022-02-15 22:59:01" itemprop="dateModified" datetime="2022-02-15T22:59:01+08:00">2022-02-15</time>
       </span>
 
   
@@ -249,14 +249,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>6.9k</span>
+      <span>7.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
+      <span>7 分钟</span>
     </span>
 </div>
 
@@ -349,6 +349,7 @@
 <p>如果 follower 崩溃或运行缓慢，或者网络数据包丢失，leader 会无限期地重试 AppendEntries RPC（即使它已经响应了客户端），直到所有  follower 最终存储所有日志条目。Leader为每个Follower维护一个 nextIndex，这是将发送给该Follower的下一个日志条目的索引。</p>
 <h4 id="Log-replication"><a href="#Log-replication" class="headerlink" title="Log replication"></a>Log replication</h4><p>如果不同日志中的两个条目具有相同的索引和term，则它们存储相同的命令，且之前的所有条目均相同。第二个属性由Leader发送AppendEntries RPC进行简单的一致性检查：Leader在其Log中包含新entry之前的条目的index和term，如果Follower在其Log中没有找到具有相同index和term的条目，则它拒绝新entry。</p>
 <p>领导者通过强制追随者的日志复制自己的日志来处理不一致。领导者为每个追随者维护一个 nextIndex，这是领导者将发送给该追随者的下一个日志条目的索引。</p>
+<p>日志恢复（Log Backup）：</p>
 <p>当领导者首次上台时，它会将所有 nextIndex 值初始化为其日志中最后一个值之后的索引（Leader最新Log的index + 1）。如果Follower的日志与Leader的日志不一致，则  AppendEntries 一致性检查将在下一个 AppendEntries RPC 中失败。拒绝后，领导者减少 nextIndex 并重试  AppendEntries RPC。最终 nextIndex 将达到领导者和追随者日志匹配的点。这时，AppendEntries  将成功，这将删除跟随者日志中的任何冲突条目，并添加Leader中的后续Log entry（如果有）。一旦 AppendEntries 成功，follower 的 log 就会和  leader 的一致，并且在接下来的任期内保持这种状态。</p>
 <h3 id="Leader选举"><a href="#Leader选举" class="headerlink" title="Leader选举"></a>Leader选举</h3><p>任何一条AppendEntries消息都会重置Raft节点的选举定时器。Followers收到了AppendEntries消息，会重置自己的选举定时器，这样Leader就可以阻止任何其他节点成为一个候选人。所以只要所有环节都在正常工作，不断重复的心跳会阻止任何新的选举发生。</p>
 <p>如果某个服务器的选举定时器耗尽，该服务器会<strong>增加任期号</strong>（term number）。<strong>一个任期内不能有超过一个Leader</strong>，所以为了成为一个新的Leader，这里需要开启一个新的任期。 之后，当前服务器为自己投票并会并行发出请求投票（RequestVote）RPC，这个消息会发给所有的Raft节点。</p>
@@ -364,9 +365,10 @@
 <p>Leader一般会工作直到失败</p>
 <h4 id="选举限制"><a href="#选举限制" class="headerlink" title="选举限制"></a>选举限制</h4><p>RequestVote RPC 包含有关Candidate日志的信息，如果投票者自己的日志比候选人的日志更新，则投票者拒绝投票。</p>
 <p><strong>这保证了新的Leader必然包含所有已提交的条目。</strong></p>
-<p>Raft  通过比较日志中最后一个条目的索引和期限来确定两个日志中哪个更新。如果日志具有不同term的最后条目，则具有较晚term的日志是最新的。如果日志以相同的期限结束，那么无论哪个日志较长，都是最新的。</p>
+<p>Raft  通过比较日志中最后一个条目的索引和term来确定两个日志中哪个更新。如果日志具有不同term的最后条目，则具有较晚term的日志是最新的。如果日志以相同的term结束，那么较长Log的那一方是最新的。</p>
 <h4 id="提交规则"><a href="#提交规则" class="headerlink" title="提交规则"></a>提交规则</h4><p>Leader不能立即断定上一任期的条目一旦存储在大多数服务器上就是已提交的。由此引出一个简单的提交规则：</p>
 <p>Leader只能通过半数票决提交当前任期号对应的Log，上一任期的Log哪怕通过半数票决也不会被提交。</p>
+<p>具体为：如果存在一个N，这个N大于commitIndex，多数派的matchIndex[i]都大于等于N，并且log[N].term等于currentTerm，那么更新commitIndex为N。</p>
 <p>当领导者从之前的任期复制条目时，日志条目会保留其原始任期号。在其他一致性算法中，如果新的领导者从先前的term中复制条目，它必须使用新的term id。Raft 的方法使推理日志条目变得更容易，因为它们随着时间的推移和日志保持相同的术语编号。此外，与其他算法相比，Raft 中的新领导者发送的先前任期的日志条目更少（其他算法必须发送冗余日志条目以重新编号，然后才能提交）。</p>
 <h4 id="Term"><a href="#Term" class="headerlink" title="Term"></a>Term</h4><img src="/2022/02/02/6-824/term.png" class="" title="[term]">
 
@@ -375,6 +377,15 @@
 <h4 id="选举定时器"><a href="#选举定时器" class="headerlink" title="选举定时器"></a>选举定时器</h4><p>每一次一个节点重置自己的选举定时器时，都需要重新选择一个随机的超时时间。</p>
 <p>下限：一次心跳包的间隔时间（最好是多个，允许网络丢包）</p>
 <p>不同服务器选择的超时时间差：至少需要大于发送一条RPC所需要的往返（Round-Trip）时间，使得第一个开始选举的节点能够完成一轮选举</p>
+<h2 id="Lab2B"><a href="#Lab2B" class="headerlink" title="Lab2B"></a>Lab2B</h2><p>一些细节：</p>
+<ol>
+<li><p>nextindex的快速回退。在AppendEntries的reply中发送Follower的日志长度Xlen，最新的Term：XTerm，最新的Term对应的起始Log下标：XIndex。如果接下来要尝试匹配的prevLogIndex比follower当前所拥有的的日志长度（XLen）还要大，那么显然直接从XLen尝试匹配即可。如果接下来要尝试匹配的prevLogIndex在XLen以内，因为我们已经知道了follower的日志从XIndex到当前prevLogIndex的日志项的term都是XTerm，那么我们可以直接在leader侧遍历匹配一遍，而无需多次往返RPC通信。</p>
+</li>
+<li><p>提交给应用层的applyCh的操作是单独由goroutine完成，并且要快速释放锁。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rf *Raft)</span> <span class="title">appMsgApplier</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		rf.mu.Lock()</span><br><span class="line">		<span class="keyword">for</span> !rf.moreApply &#123;</span><br><span class="line">			rf.applyCond.Wait()</span><br><span class="line">		&#125;</span><br><span class="line">		...</span><br><span class="line">		rf.mu.Unlock()</span><br><span class="line">		<span class="keyword">for</span> i := lastApplied + <span class="number">1</span>; i &lt;= commitIndex; i++ &#123;</span><br><span class="line">			msg := ApplyMsg&#123;</span><br><span class="line">				...,</span><br><span class="line">			&#125;</span><br><span class="line">			rf.applyCh &lt;- msg</span><br><span class="line">			rf.mu.Lock()</span><br><span class="line">			rf.lastApplied = i</span><br><span class="line">			rf.mu.Unlock()</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>Go RPC sends only struct fields whose names start with capital letters. Sub-structures must also have capitalized field names</p>
+</li>
+</ol>
 
     </div>
 
@@ -444,13 +455,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">55k</span>
+    <span title="站点总字数">56k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">50 分钟</span>
+    <span title="站点阅读时长">51 分钟</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
