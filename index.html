@@ -131,7 +131,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -193,6 +193,93 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2022/02/21/golang-goroutine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="huster-djx">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="huster-DJX">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/02/21/golang-goroutine/" class="post-title-link" itemprop="url">golang-goroutine</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-02-21 11:14:49 / 修改时间：22:39:28" itemprop="dateCreated datePublished" datetime="2022-02-21T11:14:49+08:00">2022-02-21</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>GMP、协程</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/21/golang-goroutine/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -224,7 +311,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-02-21 11:13:15" itemprop="dateModified" datetime="2022-02-21T11:13:15+08:00">2022-02-21</time>
+        <time title="修改时间：2022-02-21 13:10:21" itemprop="dateModified" datetime="2022-02-21T13:10:21+08:00">2022-02-21</time>
       </span>
 
   
@@ -234,14 +321,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>15k</span>
+      <span>16k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>14 分钟</span>
+      <span>15 分钟</span>
     </span>
 </div>
 
@@ -624,7 +711,33 @@
 <li>Cookie 只能存储 ASCII 码字符串，而 Session 则可以存储任何类型的数据</li>
 <li>1个Cookie只能存储1个对象（Cookie只能存储 ASCII 码字符串）,而1个Session可以存储多个对象</li>
 </ul>
-<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><h1 id="OS"><a href="#OS" class="headerlink" title="OS"></a>OS</h1><h2 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h2><h3 id="进程和线程区别"><a href="#进程和线程区别" class="headerlink" title="进程和线程区别"></a>进程和线程区别</h3><p>进程是资源分配的基本单位。线程是独立调度的基本单位。</p>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><h1 id="OS"><a href="#OS" class="headerlink" title="OS"></a>OS</h1><h2 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h2><p>零拷贝（Zero-Copy）是一种 <code>I/O</code> 操作优化技术，可以快速高效地将数据从文件系统移动到网络接口，而不需要将其从内核空间复制到用户空间。</p>
+<h3 id="传统IO过程"><a href="#传统IO过程" class="headerlink" title="传统IO过程"></a>传统IO过程</h3><img src="/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E4%BC%A0%E7%BB%9FIO.png" class="" title="[传统IO]">
+
+<p>一次完整IO包括两次系统调用（read，write），四次内核态/用户态转换，四次数据拷贝（图中蓝色部分）。</p>
+<p>四次数据拷贝：</p>
+<ol>
+<li>把磁盘上的数据拷贝到操作系统内核的缓冲区里，这个拷贝的过程是通过 DMA 搬运的。（这一现象一般称为<strong>缓存IO</strong>，数据在传输过程中需要在应用程序地址空间和内核进行多次数据拷贝操作，这些数据拷贝操作所带来的 CPU 以及内存开销是非常大的。）</li>
+<li>把内核缓冲区的数据拷贝到用户的缓冲区里，于是我们应用程序就可以使用这部分数据了，这个拷贝到过程是由 CPU 完成的。</li>
+</ol>
+<h3 id="mmap-write方式实现零拷贝"><a href="#mmap-write方式实现零拷贝" class="headerlink" title="mmap/write方式实现零拷贝"></a>mmap/write方式实现零拷贝</h3><img src="/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/mmapwrite%E5%AE%9E%E7%8E%B0%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" class="" title="[mmap&#x2F;write实现零拷贝]">
+
+<p>把数据读取到内核缓冲区后，应用程序进行写入操作时，直接把内核的<code>Read Buffer</code>的数据复制到<code>Socket Buffer</code>以便写入，这次内核之间的复制也是需要CPU的参与的。</p>
+<p>相比于传统IO只减少了一次CPU COPY。</p>
+<h3 id="sendfile-方式"><a href="#sendfile-方式" class="headerlink" title="sendfile 方式"></a>sendfile 方式</h3><p>sendfile将 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mmap();</span><br><span class="line">write();</span><br></pre></td></tr></table></figure>
+
+<p>转化为一个系统调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sendfile();</span><br></pre></td></tr></table></figure>
+
+<p><code>sendfile</code>方式只有三次数据复制（其中只有一次 CPU COPY）以及2次上下文切换。</p>
+<h3 id="带有-scatter-gather-的-sendfile方式"><a href="#带有-scatter-gather-的-sendfile方式" class="headerlink" title="带有 scatter/gather 的 sendfile方式"></a>带有 scatter/gather 的 sendfile方式</h3><img src="/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/scattergather.png" class="" title="[scatter&#x2F;gather的sendfile]">
+
+<p>其原理就是在内核空间 Read BUffer 和 Socket Buffer 不做数据复制，而是将 Read Buffer 的内存地址、偏移量记录到相应的 Socket Buffer 中，这样就不需要复制。其本质和虚拟内存的解决方法思路一致，就是内存地址的记录。</p>
+<p>scatter/gather 的 sendfile 只有两次数据复制（都是 DMA COPY）及 2 次上下文切换。</p>
+<h3 id="splice–不仅局限于fd与socket"><a href="#splice–不仅局限于fd与socket" class="headerlink" title="splice–不仅局限于fd与socket"></a>splice–不仅局限于fd与socket</h3><p><code>splice</code> 调用和<code>sendfile</code> 非常相似，用户应用程序必须拥有两个已经打开的文件描述符，一个表示输入设备，一个表示输出设备。与<code>sendfile</code>不同的是，<code>splice</code><strong>允许任意两个文件互相连接</strong>，而并不只是文件与<code>socket</code>进行数据传输。对于从一个文件描述符发送数据到<code>socket</code>这种特例来说，一直都是使用<code>sendfile</code>系统调用，而<code>splice</code>一直以来就只是一种机制，它并不仅限于<code>sendfile</code>的功能。也就是说 sendfile 是 splice 的一个子集。</p>
+<p><strong>和 sendfile 不同的是，splice 不需要硬件支持。</strong></p>
+<h2 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h2><h3 id="进程和线程区别"><a href="#进程和线程区别" class="headerlink" title="进程和线程区别"></a>进程和线程区别</h3><p>进程是资源分配的基本单位。线程是独立调度的基本单位。</p>
 <ul>
 <li><p>拥有资源</p>
 <p>进程是资源分配的基本单位，但是线程不拥有资源，线程可以访问隶属进程的资源。</p>
@@ -1081,99 +1194,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/12/31/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="huster-djx">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="huster-DJX">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/12/31/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">2021年终总结</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-12-31 23:48:12" itemprop="dateCreated datePublished" datetime="2021-12-31T23:48:12+08:00">2021-12-31</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-01-01 09:43:42" itemprop="dateModified" datetime="2022-01-01T09:43:42+08:00">2022-01-01</time>
-      </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>815</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>致2021的过去</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/12/31/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
@@ -1198,13 +1218,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">75k</span>
+    <span title="站点总字数">77k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:08</span>
+    <span title="站点阅读时长">1:10</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
