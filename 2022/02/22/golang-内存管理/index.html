@@ -20,28 +20,31 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="https:&#x2F;&#x2F;geektutu.com&#x2F;post&#x2F;7days-golang-q1.html\定义一个函数类型 F，并且实现接口 A 的方法，然后在这个方法中调用自己。这是 Go 语言中将其他函数（参数返回值定义与 F 一致）转换为接口 A 的常用技巧。">
+<meta name="description" content="垃圾回收、栈逃逸…">
 <meta property="og:type" content="article">
-<meta property="og:title" content="接口型函数">
-<meta property="og:url" content="https://husterdjx.github.io/2021/12/13/%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:title" content="golang-内存管理">
+<meta property="og:url" content="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html">
 <meta property="og:site_name" content="huster-DJX">
-<meta property="og:description" content="https:&#x2F;&#x2F;geektutu.com&#x2F;post&#x2F;7days-golang-q1.html\定义一个函数类型 F，并且实现接口 A 的方法，然后在这个方法中调用自己。这是 Go 语言中将其他函数（参数返回值定义与 F 一致）转换为接口 A 的常用技巧。">
+<meta property="og:description" content="垃圾回收、栈逃逸…">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-12-13T07:55:22.000Z">
-<meta property="article:modified_time" content="2022-01-01T01:25:13.844Z">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0.png">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%86%99%E5%B1%8F%E9%9A%9C.png">
+<meta property="article:published_time" content="2022-02-22T14:03:02.000Z">
+<meta property="article:modified_time" content="2022-02-22T15:00:27.317Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0.png">
 
 
-<link rel="canonical" href="https://husterdjx.github.io/2021/12/13/%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0/">
+<link rel="canonical" href="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/12/13/%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0/","path":"2021/12/13/接口型函数/","title":"接口型函数"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/","path":"2022/02/22/golang-内存管理/","title":"golang-内存管理"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>接口型函数 | huster-DJX</title>
+<title>golang-内存管理 | huster-DJX</title>
   
 
 
@@ -108,7 +111,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -121,6 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E5%9F%BA%E7%A1%80%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="nav-number">1.1.</span> <span class="nav-text">三种基础的垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%EF%BC%88Mark-and-Sweep%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">标记清除（Mark and Sweep）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E6%94%B6%E9%9B%86%EF%BC%88Copy-and-Collection%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制收集（Copy and Collection）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-number">1.1.3.</span> <span class="nav-text">引用计数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4-%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0-%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="nav-number">1.2.</span> <span class="nav-text">Go语言的标记清除+三色标记+写屏障</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -199,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/12/13/%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0/">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -212,7 +216,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          接口型函数
+          golang-内存管理
         </h1>
 
         <div class="post-meta-container">
@@ -222,16 +226,10 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2021-12-13 15:55:22" itemprop="dateCreated datePublished" datetime="2021-12-13T15:55:22+08:00">2021-12-13</time>
+      <time title="创建时间：2022-02-22 22:03:02 / 修改时间：23:00:27" itemprop="dateCreated datePublished" datetime="2022-02-22T22:03:02+08:00">2022-02-22</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-01-01 09:25:13" itemprop="dateModified" datetime="2022-01-01T09:25:13+08:00">2022-01-01</time>
-      </span>
 
   
     <span class="post-meta-break"></span>
@@ -240,14 +238,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>118</span>
+      <span>1.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>2 分钟</span>
     </span>
 </div>
 
@@ -258,8 +256,46 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <span id="more"></span>
-<p><a target="_blank" rel="noopener" href="https://geektutu.com/post/7days-golang-q1.html/">https://geektutu.com/post/7days-golang-q1.html\</a><br>定义一个函数类型 F，并且实现接口 A 的方法，然后在这个方法中调用自己。这是 Go 语言中将其他函数（参数返回值定义与 F 一致）转换为接口 A 的常用技巧。</p>
+        <p>垃圾回收、栈逃逸…</p>
+<span id="more"></span>
+
+<h1 id="垃圾回收机制"><a href="#垃圾回收机制" class="headerlink" title="垃圾回收机制"></a>垃圾回收机制</h1><h2 id="三种基础的垃圾回收"><a href="#三种基础的垃圾回收" class="headerlink" title="三种基础的垃圾回收"></a>三种基础的垃圾回收</h2><h3 id="标记清除（Mark-and-Sweep）"><a href="#标记清除（Mark-and-Sweep）" class="headerlink" title="标记清除（Mark and Sweep）"></a>标记清除（Mark and Sweep）</h3><ul>
+<li>标记阶段 — 从根对象出发查找并标记堆中所有存活的对象；</li>
+<li>清除阶段 — 遍历堆中的全部对象，回收未被标记的垃圾对象并将回收的内存加入空闲链表。</li>
+</ul>
+<p>缺点：在分配了大量对象，并且其中只有一小部分存活的情况下，所消耗的时间会大大超过必要的值，这是因为在清除阶段还需要对大量死亡对象进行扫描。</p>
+<h3 id="复制收集（Copy-and-Collection）"><a href="#复制收集（Copy-and-Collection）" class="headerlink" title="复制收集（Copy and Collection）"></a>复制收集（Copy and Collection）</h3><p>从根对象开始递归对象，并复制到新空间中，递归完毕则将旧空间废弃掉，直接使用新空间。这样在存活比例小的情境下效率高。</p>
+<p>但是，和标记相比，将对象复制一份所需要的开销则比较大，因此在“存活”对象比例较高的情况下，反而会比较不利。</p>
+<p>这种算法的另一个好处是它具有<strong>局部性（Lo-cality）</strong>。在复制收集过程中，会按照对象被引用的顺序将对象复制到新空间中。于是，关系较近的对象被放在距离较近的内存空间中的可能性会提高，这被称为局部性。局部性高的情况下，内存缓存会更容易有效运作，程序的运行性能也能够得到提高。</p>
+<h3 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h3><p>XV6内核管理COW时就是用的这种算法。</p>
+<p>在每个对象中保存该对象的引用计数，当引用发生增减时对计数进行更新。引用计数的增减，一般发生在变量赋值、对象内容更新、函数结束（局部变量不再被引用）等时间点。当一个对象的引用计数变为0时，则说明它将来不会再被引用，因此可以释放相应的内存空间。</p>
+<img src="/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0.png" class="" title="[引用计数]">
+
+<p>其他的GC机制中，要预测一个对象何时会被释放是很困难的，而在引用计数方式中则是立即被释放的。而且，由于释放操作是针对每个对象个别执行的，因此和其他算法相比，由GC而产生的中断时间（Pause time）就比较短，这也是一个优点。</p>
+<p>引用计数最大的缺点，就是无法释放循环引用的对象。</p>
+<p>引用计数的第二个缺点，就是必须在引用发生增减时对引用计数做出正确的增减，而如果漏掉了某个增减的话，就会引发很难找到原因的内存错误。引用数忘了增加的话，会对不恰当的对象进行释放；而引用数忘了减少的话，对象会一直残留在内存中，从而导致内存泄漏。</p>
+<p>最后一个缺点就是，引用计数管理并不适合并行处理。频繁并发修改引用计数时，必须用锁，又会导致竞争开销。</p>
+<h2 id="Go语言的标记清除-三色标记-写屏障"><a href="#Go语言的标记清除-三色标记-写屏障" class="headerlink" title="Go语言的标记清除+三色标记+写屏障"></a>Go语言的标记清除+三色标记+写屏障</h2><p>Go 语言采用的是标记清除算法。并在此基础上使用了三色标记法和写屏障技术，提高了效率。</p>
+<p>标记清除算法的一大问题是在标记期间，需要暂停程序（Stop the world，STW），标记结束之后，用户程序才可以继续执行。为了能够异步执行，减少 STW 的时间，Go 语言采用了三色标记法。</p>
+<p>三色标记算法将程序中的对象分成白色、黑色和灰色三类。</p>
+<ul>
+<li>白色：不确定对象。</li>
+<li>灰色：存活对象，子对象待处理。</li>
+<li>黑色：存活对象。</li>
+</ul>
+<p>标记开始时，所有对象加入白色集合（这一步需 STW ）。首先将根对象标记为灰色，加入灰色集合，垃圾搜集器取出一个灰色对象，将其标记为黑色，并将其指向的对象标记为灰色，加入灰色集合。重复这个过程，直到灰色集合为空为止，标记阶段结束。那么白色对象即可需要清理的对象，而黑色对象均为根可达的对象，不能被清理。</p>
+<p>三色标记法因为多了一个白色的状态来存放不确定对象，所以后续的标记阶段可以<strong>并发地执行</strong>。当然并发执行的代价是可能会造成一些遗漏，因为那些早先被标记为黑色的对象可能目前已经是不可达的了。所以三色标记法是一个 false negative（假阴性）的算法。</p>
+<p>还有一个问题是GC过程中出现引用对象的改变，可能导致对引用对象的丢失。</p>
+<img src="/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%86%99%E5%B1%8F%E9%9A%9C.png" class="" title="[写屏障克服的场景]">
+
+<p>Go 使用了内存屏障技术，它是在用户程序读取对象、创建新对象以及更新对象指针时执行的一段代码，类似于一个钩子。垃圾收集器使用了写屏障（Write Barrier）技术，当对象新增或更新时，会将其着色为灰色。这样即使与用户程序并发执行，对象的引用发生改变时，垃圾收集器也能正确处理了。</p>
+<p>全部流程：</p>
+<ul>
+<li>1）标记准备(Mark Setup，需 STW)，打开写屏障(Write Barrier)</li>
+<li>2）使用三色标记法标记（Marking, 并发）</li>
+<li>3）标记结束(Mark Termination，需 STW)，关闭写屏障。</li>
+<li>4）清理(Sweeping, 并发)</li>
+</ul>
 
     </div>
 
@@ -293,14 +329,11 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/12/12/golang-%E9%97%AD%E5%8C%85/" rel="prev" title="golang-闭包">
-                  <i class="fa fa-chevron-left"></i> golang-闭包
+                <a href="/2022/02/22/golang-%E9%94%81/" rel="prev" title="golang-锁">
+                  <i class="fa fa-chevron-left"></i> golang-锁
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/12/31/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" rel="next" title="2021年终总结">
-                  2021年终总结 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
