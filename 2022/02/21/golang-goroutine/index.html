@@ -27,11 +27,16 @@
 <meta property="og:site_name" content="huster-DJX">
 <meta property="og:description" content="GMP、协程">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/ULT%E4%B8%8EKLT%E6%AF%94%E8%BE%83.png">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/GM%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/GMP.png">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png">
 <meta property="article:published_time" content="2022-02-21T03:14:49.000Z">
 <meta property="article:modified_time" content="2022-02-21T14:39:28.903Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/ULT%E4%B8%8EKLT%E6%AF%94%E8%BE%83.png">
 
 
 <link rel="canonical" href="https://husterdjx.github.io/2022/02/21/golang-goroutine/">
@@ -264,16 +269,16 @@
 <li>与线程关系是n:m，即可以在n个系统线程上多工调度m个Goroutine</li>
 </ul>
 <p><strong>用户级线程即协程</strong>，由应用程序创建与管理，协程必须与内核级线程绑定之后才能执行。<strong>线程由 CPU 调度是抢占式的，协程由用户态调度是协作式的，一个协程让出 CPU 后，才执行下一个协程</strong>。</p>
+<img src="/2022/02/21/golang-goroutine/ULT%E4%B8%8EKLT%E6%AF%94%E8%BE%83.png" class="" title="[ULT与KLT比较]">
 
-
-<h1 id="GM模型"><a href="#GM模型" class="headerlink" title="GM模型"></a>GM模型</h1>
+<h1 id="GM模型"><a href="#GM模型" class="headerlink" title="GM模型"></a>GM模型</h1><img src="/2022/02/21/golang-goroutine/GM%E6%A8%A1%E5%9E%8B.png" class="" title="[GM模型]">
 
 <p>M(内核线程)从加锁的Goroutine队列中获取G(协程)执行，如果G在运行过程中创建了新的G，那么新的G也会被放入全局队列中。</p>
 <p>很显然这样做有俩个缺点，<strong>一是调度，返回G都需要获取队列锁，形成了激烈的竞争。二是M转移G没有把资源最大化利用。</strong>比如当M1在执行G1时，M1创建了G2，为了继续执行G1，需要把G2交给M2执行，因为G1和G2是相关的，而寄存器中会保存G1的信息，因此G2最好放在M1上执行，而不是其他的M。</p>
 <h1 id="GMP模型"><a href="#GMP模型" class="headerlink" title="GMP模型"></a>GMP模型</h1><p>G全称为Goroutine协程，M全称为Machine内核级线程，P全称为Processor协程运行所需的资源。</p>
 <p>G:主要保存 goroutine 的运行时栈信息（stack结构体）以及 CPU 的一些寄存器的值（gobuf结构体），还有关联的M，全局队列中下个G等信息。</p>
 <p>M:它保存了 M 自身使用的栈信息、当 前正在 M 上执行的 G 信息、与之绑定的 P 信息。</p>
-
+<img src="/2022/02/21/golang-goroutine/GMP.png" class="" title="[GMP]">
 
 <ol>
 <li><p>两个队列</p>
@@ -281,7 +286,7 @@
 <p>P的本地队列：P内置的G队列，存的数量有限，不超过256个。这里有两种特殊情况。一是当队列P1中的G1在运行过程中新建G2时，G2优先存放到P1的本地队列中，如果队列满了（256G），则会把P1队列中一半的G移动到全局队列。二是如果P的本地队列为空，那么他会先到全局队列中获取G，如果全局队列中也没有G，则会尝试从其他线程绑定的P中偷取一半的G。</p>
 </li>
 </ol>
-<h2 id="协程调度原理"><a href="#协程调度原理" class="headerlink" title="协程调度原理"></a>协程调度原理</h2>
+<h2 id="协程调度原理"><a href="#协程调度原理" class="headerlink" title="协程调度原理"></a>协程调度原理</h2><img src="/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png" class="" title="[协程调度原理]">
 
 <h2 id="相对GM做出的优化"><a href="#相对GM做出的优化" class="headerlink" title="相对GM做出的优化"></a>相对GM做出的优化</h2><ol>
 <li>每个 P 有自己的本地队列，而不是所有的G操作都要经过全局的G队列，这样锁的竞争会少的多的多。而 GM 模型的性能开销大头就是锁竞争。</li>
