@@ -27,11 +27,13 @@
 <meta property="og:site_name" content="huster-DJX">
 <meta property="og:description" content="乐观锁、悲观锁、读写锁、自旋锁、条件锁…">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://husterdjx.github.io/2022/02/22/golang-%E9%94%81/%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90.png">
 <meta property="article:published_time" content="2022-02-22T03:10:25.000Z">
-<meta property="article:modified_time" content="2022-02-26T05:41:17.460Z">
+<meta property="article:modified_time" content="2022-02-27T15:09:00.004Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://husterdjx.github.io/2022/02/22/golang-%E9%94%81/%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90.png">
 
 
 <link rel="canonical" href="https://husterdjx.github.io/2022/02/22/golang-%E9%94%81/">
@@ -121,7 +123,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%82%B2%E8%A7%82%E9%94%81%E4%B8%8E%E4%B9%90%E8%A7%82%E9%94%81"><span class="nav-number">1.</span> <span class="nav-text">悲观锁与乐观锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E9%94%81"><span class="nav-number">2.</span> <span class="nav-text">读写锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Cond"><span class="nav-number">3.</span> <span class="nav-text">sync.Cond</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Pool"><span class="nav-number">4.</span> <span class="nav-text">sync.Pool</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E"><span class="nav-number">4.1.</span> <span class="nav-text">声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">4.2.</span> <span class="nav-text">操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%A0%87%E5%87%86%E5%BA%93%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">4.3.</span> <span class="nav-text">在标准库的应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Once"><span class="nav-number">5.</span> <span class="nav-text">sync.Once</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">5.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#done%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AD%97%E6%AE%B5"><span class="nav-number">5.2.</span> <span class="nav-text">done为什么是第一个字段</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%82%B2%E8%A7%82%E9%94%81%E4%B8%8E%E4%B9%90%E8%A7%82%E9%94%81"><span class="nav-number">1.</span> <span class="nav-text">悲观锁与乐观锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E9%94%81"><span class="nav-number">2.</span> <span class="nav-text">读写锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Cond"><span class="nav-number">3.</span> <span class="nav-text">sync.Cond</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Pool"><span class="nav-number">4.</span> <span class="nav-text">sync.Pool</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E"><span class="nav-number">4.1.</span> <span class="nav-text">声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">4.2.</span> <span class="nav-text">操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%A0%87%E5%87%86%E5%BA%93%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">4.3.</span> <span class="nav-text">在标准库的应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Once"><span class="nav-number">5.</span> <span class="nav-text">sync.Once</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">5.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#done%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AD%97%E6%AE%B5"><span class="nav-number">5.2.</span> <span class="nav-text">done为什么是第一个字段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Mutex%E5%AE%9E%E7%8E%B0%E5%85%AC%E5%B9%B3"><span class="nav-number">6.</span> <span class="nav-text">sync.Mutex实现公平</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-WaitGroup"><span class="nav-number">7.</span> <span class="nav-text">sync.WaitGroup</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">7.1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90"><span class="nav-number">7.2.</span> <span class="nav-text">注意内存对齐</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -231,7 +233,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-02-26 13:41:17" itemprop="dateModified" datetime="2022-02-26T13:41:17+08:00">2022-02-26</time>
+        <time title="修改时间：2022-02-27 23:09:00" itemprop="dateModified" datetime="2022-02-27T23:09:00+08:00">2022-02-27</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -250,14 +252,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3k</span>
+      <span>4.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
+      <span>4 分钟</span>
     </span>
 </div>
 
@@ -273,10 +275,16 @@
 
 <h1 id="悲观锁与乐观锁"><a href="#悲观锁与乐观锁" class="headerlink" title="悲观锁与乐观锁"></a>悲观锁与乐观锁</h1><p>悲观锁严格遵循加锁-&gt;操作-&gt;释放锁的步骤；</p>
 <p>而乐观锁则是不进行锁的操作，将自己修改以后的数据与原数据进行比较，如果不同则重复操作-&gt;检查的步骤。</p>
+<p>乐观锁实现：一般会使用版本号机制或 CAS 算法实现。</p>
+<ol>
+<li>版本号。数据每次更新，版本号都会更新，记下初始时的版本号，要修改前查看版本号，跟之前的不一样就说明有其他线程修改了该数据，本线程不再更新，更新失败。</li>
+<li>CAS算法。思路是用三个变量：需要读写的内存位置V、进行比较的预期原值A、拟写入的新值B。如果位置V的值仍为预期的A时说明没有其他线程改动它，可以修改为新值B，否则不做修改。</li>
+</ol>
 <h1 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h1><p>读写锁可以让多个读操作同时并发，同时读取，但是对于写操作是完全互斥的。也就是说，当一个goroutine进行写操作的时候，其他goroutine既不能进行读操作，也不能进行写操作。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> rw sync.RWMutex</span><br><span class="line">rw.Lock()</span><br><span class="line">rw.UnLock()</span><br><span class="line">rw.RLock()</span><br><span class="line">rw.RUnlock()</span><br></pre></td></tr></table></figure>
 
-<h1 id="sync-Cond"><a href="#sync-Cond" class="headerlink" title="sync.Cond"></a>sync.Cond</h1><p>一般被称为条件锁：</p>
+<h1 id="sync-Cond"><a href="#sync-Cond" class="headerlink" title="sync.Cond"></a>sync.Cond</h1><p>sync.Cond 在生产者消费者模型中非常典型，带有互斥锁的队列当元素满时， 如果生产在向队列插入元素时将队列锁住，会产生既不能读，也不能写的情况。 sync.Cond 就解决了这个问题。</p>
+<p>一般被称为条件锁：</p>
 <ul>
 <li>等待通知: wait,阻塞当前线程，直到收到该条件变量发来的通知</li>
 <li>单发通知: signal,让该条件变量向至少一个正在等待它的通知的线程发送通知，表示共享数据的状态已经改变</li>
@@ -310,6 +318,23 @@
 <li>热路径：是程序非常频繁执行的一系列指令，sync.Once 绝大部分场景都会访问 <code>o.done</code>，如果 hot path 编译后的机器码指令更少，更直接，必然是能够提升性能的。</li>
 <li>为什么放在第一个字段就能够减少指令呢？因为结构体第一个字段的地址和结构体的指针是相同的，如果是第一个字段，直接对结构体的指针解引用即可。如果是其他的字段，除了结构体指针外，还需要计算与第一个值的偏移(calculate offset)。在机器码中，偏移量是随指令传递的附加值，CPU 需要做一次偏移值与指针的加法运算，才能获取要访问的值的地址。因为，访问第一个字段的机器代码更紧凑，速度更快。</li>
 </ul>
+<h1 id="sync-Mutex实现公平"><a href="#sync-Mutex实现公平" class="headerlink" title="sync.Mutex实现公平"></a>sync.Mutex实现公平</h1><p>互斥锁有两种状态：正常状态和饥饿状态。</p>
+<p>在正常状态下，所有等待锁的 goroutine 按照FIFO顺序等待。唤醒的 goroutine 不会直接拥有锁，而是会和新请求锁的 goroutine 竞争锁的拥有。新请求锁的 goroutine 具有优势：它正在 CPU 上执行，而且可能有好几个，所以刚刚唤醒的 goroutine 有很大可能在锁竞争中失败。在这种情况下，这个被唤醒的 goroutine 会加入到等待队列的前面。 如果一个等待的 goroutine 超过 1ms 没有获取锁，那么它将会把锁转变为饥饿模式。</p>
+<p>在饥饿模式下，锁的所有权将从 unlock 的 goroutine 直接交给交给等待队列中的第一个。新来的 goroutine 将不会尝试去获得锁，即使锁看起来是 unlock 状态, 也不会去尝试自旋操作，而是放在等待队列的尾部。</p>
+<p>如果一个等待的 goroutine 获取了锁，并且满足一以下其中的任何一个条件：(1)它是队列中的最后一个；(2)它等待的时候小于1ms。它会将锁的状态转换为正常状态。</p>
+<p>正常状态有很好的性能表现，饥饿模式也是非常重要的，因为它能阻止尾部延迟的现象。</p>
+<h1 id="sync-WaitGroup"><a href="#sync-WaitGroup" class="headerlink" title="sync.WaitGroup"></a>sync.WaitGroup</h1><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> WaitGroup <span class="keyword">struct</span> &#123;</span><br><span class="line">	noCopy noCopy</span><br><span class="line">	state1 [<span class="number">3</span>]<span class="keyword">uint32</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>noCopy这个主要用来限制不能进行copy，这里是为了避免copy后的waitGroup并发使用后，可能会与原waitGroup出现异常而panic。</li>
+<li>counter 通过Add()设置的子goroutine的数量，即被等待线程计数</li>
+<li>waiter 通过Wait()陷入阻塞的等待者计数</li>
+<li>semap 信号量，用于唤醒阻塞waiter</li>
+</ul>
+<h2 id="注意内存对齐"><a href="#注意内存对齐" class="headerlink" title="注意内存对齐"></a>注意内存对齐</h2><p>注意一下couter、waiter、semap并不是顺序存储的，64bit操作系统的原子操作需要保证64bit的内存对齐，在设计上我们需要保证couter和waiter的操作原子性。如果数组的首元素地址能被8整除，则counter和waiter刚好可以在同一块原子操作的64bit内存上，所以取数组前两个元素分别表示couter和waiter；如果不能被8整除（根据内存对齐的原理，地址必然是4的倍数），则取数组后两个。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根据内存对齐方式的不同，返回statep(couter占用高32bit和waiter占用低32bit)和semap的地址</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wg *WaitGroup)</span> <span class="title">state</span><span class="params">()</span> <span class="params">(statep *<span class="keyword">uint64</span>, semap *<span class="keyword">uint32</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">uintptr</span>(unsafe.Pointer(&amp;wg.state1))%<span class="number">8</span> == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> (*<span class="keyword">uint64</span>)(unsafe.Pointer(&amp;wg.state1)), &amp;wg.state1[<span class="number">2</span>]</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> (*<span class="keyword">uint64</span>)(unsafe.Pointer(&amp;wg.state1[<span class="number">1</span>])), &amp;wg.state1[<span class="number">0</span>]</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/22/golang-%E9%94%81/%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90.png" class="" title="[内存对齐]">
 
     </div>
 
@@ -382,13 +407,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">88k</span>
+    <span title="站点总字数">92k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:20</span>
+    <span title="站点阅读时长">1:24</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
