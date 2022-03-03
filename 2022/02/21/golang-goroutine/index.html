@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/GMP.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png">
 <meta property="article:published_time" content="2022-02-21T03:14:49.000Z">
-<meta property="article:modified_time" content="2022-02-26T05:41:12.362Z">
+<meta property="article:modified_time" content="2022-03-03T08:36:53.412Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -236,7 +236,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-02-26 13:41:12" itemprop="dateModified" datetime="2022-02-26T13:41:12+08:00">2022-02-26</time>
+        <time title="修改时间：2022-03-03 16:36:53" itemprop="dateModified" datetime="2022-03-03T16:36:53+08:00">2022-03-03</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -255,14 +255,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
+      <span>1.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
+      <span>2 分钟</span>
     </span>
 </div>
 
@@ -300,9 +300,31 @@
 <p>全局队列：当P中的本地队列中有协程G溢出时，会被放到全局队列中。</p>
 <p>P的本地队列：P内置的G队列，存的数量有限，不超过256个。这里有两种特殊情况。一是当队列P1中的G1在运行过程中新建G2时，G2优先存放到P1的本地队列中，如果队列满了（256G），则会把P1队列中一半的G移动到全局队列。二是如果P的本地队列为空，那么他会先到全局队列中获取G，如果全局队列中也没有G，则会尝试从其他线程绑定的P中偷取一半的G。</p>
 </li>
+<li><p>全局的三个列表（M/P/G）、调度器的三个列表(空闲M、空闲P、自由G)和P的一个列表（自由G）</p>
+</li>
 </ol>
 <h2 id="协程调度原理"><a href="#协程调度原理" class="headerlink" title="协程调度原理"></a>协程调度原理</h2><img src="/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png" class="" title="[协程调度原理]">
 
+<p>M:</p>
+<ol>
+<li>一个M在其生命周期中，只会和一个内核线程关联，所以不会出现对内核线程的频繁切换。</li>
+<li>Golang的运行时执行系统监控和垃圾回收等任务时候会导致创建M，<strong>M空闲时不会被销毁</strong>，而是放到一个<code>调度器的空闲M列表</code>中，等待与P关联，M默认数量为10000</li>
+</ol>
+<p>P：</p>
+<ol>
+<li>当P没有可运行的G时候（P的可运行G队列为空），P会被放到<code>调度器的空闲P列表</code>中，等待M与它关联；</li>
+</ol>
+<p>G:</p>
+<ol>
+<li>每个P中有<code>可运行的G队列</code>和<code>自由G列表</code>，当G的代码执行完后，该G不会被销毁，而是被放到<code>P的自由G列表</code>或<code>调度器的自由G列表</code>。如果程序新建了Go协程，调度器会在自由G列表中取一个G，然后把Go协程的函数赋值到G中（如果自由G列表为空，就创建一个G）；</li>
+<li>一般情况，当G运行时间超过10ms后，该G就会被系统告知需要停止了，让其他G运行。但有三种情况该G不需要停止：<ul>
+<li>P的可运行G队列为空（没有其他G可运行）</li>
+<li>有空闲的M在寻找可运行的G（没有其他G可运行）</li>
+<li>空闲的P（还有P闲着）</li>
+</ul>
+</li>
+</ol>
+<p>可见Golang调度器在调度时很大程度复用了M，P，G。</p>
 <h2 id="相对GM做出的优化"><a href="#相对GM做出的优化" class="headerlink" title="相对GM做出的优化"></a>相对GM做出的优化</h2><ol>
 <li>每个 P 有自己的本地队列，而不是所有的G操作都要经过全局的G队列，这样锁的竞争会少的多的多。而 GM 模型的性能开销大头就是锁竞争。</li>
 <li>P的本地队列平衡上，在 GMP 模型中也实现了 <strong>Work Stealing 算法</strong>，如果 P 的本地队列为空，则会从全局队列或其他 P 的本地队列中窃取可运行的 G 来运行（通常是偷一半），减少空转，提高了资源利用率。</li>
@@ -381,13 +403,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">103k</span>
+    <span title="站点总字数">105k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:34</span>
+    <span title="站点阅读时长">1:35</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
