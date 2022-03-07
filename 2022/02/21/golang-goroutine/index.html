@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/GMP.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png">
 <meta property="article:published_time" content="2022-02-21T03:14:49.000Z">
-<meta property="article:modified_time" content="2022-03-03T08:36:53.412Z">
+<meta property="article:modified_time" content="2022-03-07T02:18:52.481Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -126,7 +126,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GM%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">GM模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GMP%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">GMP模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">协程调度原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9GM%E5%81%9A%E5%87%BA%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">相对GM做出的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E8%AE%BEP%E5%B1%82%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.3.</span> <span class="nav-text">增设P层的原因</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GM%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">GM模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GMP%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">GMP模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">协程调度原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9GM%E5%81%9A%E5%87%BA%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">相对GM做出的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E8%AE%BEP%E5%B1%82%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.3.</span> <span class="nav-text">增设P层的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E6%97%B6%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="nav-number">2.4.</span> <span class="nav-text">阻塞时的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.4.1.</span> <span class="nav-text">网络请求导致Goroutine阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.4.2.</span> <span class="nav-text">IO操作导致Goroutine阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sleep%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.4.3.</span> <span class="nav-text">sleep操作导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A2%AB%E5%94%A4%E9%86%92"><span class="nav-number">2.4.3.1.</span> <span class="nav-text">如何被唤醒</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -236,7 +236,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-03 16:36:53" itemprop="dateModified" datetime="2022-03-03T16:36:53+08:00">2022-03-03</time>
+        <time title="修改时间：2022-03-07 10:18:52" itemprop="dateModified" datetime="2022-03-07T10:18:52+08:00">2022-03-07</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -255,7 +255,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
+      <span>2.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -331,6 +331,17 @@
 <li>hand off机制当M0线程因为G1进行系统调用阻塞时，线程释放绑定的P，把P转移给其他空闲的线程M1执行，同样也是提高了资源利用率。</li>
 </ol>
 <h2 id="增设P层的原因"><a href="#增设P层的原因" class="headerlink" title="增设P层的原因"></a>增设P层的原因</h2><p>因为M层是放在内核的，我们无权修改，内核级也是用户级线程发展成熟才加入内核中。所以在M无法修改的情况下，所有的修改只能放在用户层。将队列和M绑定，由于hand off机制M会一直扩增，因此队列也需要一直扩增，那么为了使Work Stealing 能够正常进行，队列管理将会变的复杂。因此设定了P层作为中间层，进行队列管理，控制GMP数量。</p>
+<h2 id="阻塞时的行为"><a href="#阻塞时的行为" class="headerlink" title="阻塞时的行为"></a>阻塞时的行为</h2><h3 id="网络请求导致Goroutine阻塞"><a href="#网络请求导致Goroutine阻塞" class="headerlink" title="网络请求导致Goroutine阻塞"></a>网络请求导致Goroutine阻塞</h3><p>Go 程序提供了网络轮询器（NetPoller）来处理网络请求和 IO 操作的问题，其后台通过 kqueue（MacOS），epoll（Linux）或  iocp（Windows）来实现 IO 多路复用。</p>
+<p>想要执行网络系统调用的G1会被移到网络轮询器处理异步网络系统调用。此时M会从G对应的P（即本来与它绑定的P）中取一个G2继续执行。<strong>并不会</strong>取消绑定或者产生新的M。</p>
+<p>最后，异步网络系统调用由网络轮询器完成，G1 被移回到 P 的 LRQ 中。一旦 G1 可以在 M 上进行上下文切换，它负责的 Go 相关代码就可以再次执行。这里的最大优势是，执行网络系统调用不需要额外的 M。<strong>网络轮询器使用系统线程</strong>，它时刻处理一个有效的事件循环。</p>
+<h3 id="IO操作导致Goroutine阻塞"><a href="#IO操作导致Goroutine阻塞" class="headerlink" title="IO操作导致Goroutine阻塞"></a>IO操作导致Goroutine阻塞</h3><p>G1使用syscall时，调度器会将M1与P分离，引入新的M2（创建或者从休眠队列里面取出一个M2）来绑定P。</p>
+<p>阻塞的系统调用完成后：G1 可以移回 LRQ 并再次由 P 执行。如果这种情况再次发生，M1 将被放在旁边以备将来重复使用。</p>
+<h3 id="sleep操作导致Goroutine阻塞"><a href="#sleep操作导致Goroutine阻塞" class="headerlink" title="sleep操作导致Goroutine阻塞"></a>sleep操作导致Goroutine阻塞</h3><p>golang优化了time.Sleep()方法，避免其进行系统调用从而带来一些系统级别的开销。</p>
+<p>当我们在goroutine中调用time.Sleep()方法时，<strong>底层会创建一个 timer, 并将当前goroutine与timer进行绑定</strong>，并提供一个唤醒该goroutine的方法<code>goroutineReady</code>。</p>
+<p>然后通过<code>addtimerLocked</code>方法启动<strong>全局时间事件驱动器</strong><code>timerproc</code> 并将timer加入到全局timer管理器中(timer 通过<strong>最小堆</strong>的数据结构存放每个定时器)，且每一个加入到timer管理器中的timer都会被按唤醒时间进行排序，最早需要唤醒的timer排在最前面。</p>
+<p>再通过gopark()方法将当前goroutine状态标记为为**_Gwaiting<strong>，</strong>解除G与M的绑定关系**，重新放入 P 的本地队列里面等待下次执行。</p>
+<p>调用schedule()函数，重新选择一个goroutine去执行。</p>
+<h4 id="如何被唤醒"><a href="#如何被唤醒" class="headerlink" title="如何被唤醒"></a>如何被唤醒</h4><p>timer管理器会寻找timer定时管理器的第一个timer并判断唤醒条件，满足条件后通过调用<code>goroutineReady</code>方法进行唤醒，主要操作是将对应的goroutine标记为_Grunnable并将其添加到P队列中等待被M执行</p>
 
     </div>
 
@@ -403,13 +414,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">112k</span>
+    <span title="站点总字数">115k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:42</span>
+    <span title="站点阅读时长">1:45</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
