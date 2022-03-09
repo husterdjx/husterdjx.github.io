@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/22/golang-%E9%94%81/golang-mutex-state.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/22/golang-%E9%94%81/%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90.png">
 <meta property="article:published_time" content="2022-02-22T03:10:25.000Z">
-<meta property="article:modified_time" content="2022-03-07T06:12:26.232Z">
+<meta property="article:modified_time" content="2022-03-09T12:10:11.838Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -124,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%82%B2%E8%A7%82%E9%94%81%E4%B8%8E%E4%B9%90%E8%A7%82%E9%94%81"><span class="nav-number">1.</span> <span class="nav-text">悲观锁与乐观锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Mutex"><span class="nav-number">2.</span> <span class="nav-text">sync.Mutex</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-RWMutex"><span class="nav-number">3.</span> <span class="nav-text">sync.RWMutex</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Cond"><span class="nav-number">4.</span> <span class="nav-text">sync.Cond</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Pool"><span class="nav-number">5.</span> <span class="nav-text">sync.Pool</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E"><span class="nav-number">5.1.</span> <span class="nav-text">声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">5.2.</span> <span class="nav-text">操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%A0%87%E5%87%86%E5%BA%93%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">5.3.</span> <span class="nav-text">在标准库的应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Once"><span class="nav-number">6.</span> <span class="nav-text">sync.Once</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">6.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#done%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AD%97%E6%AE%B5"><span class="nav-number">6.2.</span> <span class="nav-text">done为什么是第一个字段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Mutex%E5%AE%9E%E7%8E%B0%E5%85%AC%E5%B9%B3"><span class="nav-number">7.</span> <span class="nav-text">sync.Mutex实现公平</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-WaitGroup"><span class="nav-number">8.</span> <span class="nav-text">sync.WaitGroup</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">8.1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90"><span class="nav-number">8.2.</span> <span class="nav-text">注意内存对齐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add%E6%96%B9%E6%B3%95"><span class="nav-number">8.3.</span> <span class="nav-text">Add方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Done%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%8D%E7%94%A8ADD%EF%BC%89"><span class="nav-number">8.4.</span> <span class="nav-text">Done方法（复用ADD）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wait%E6%96%B9%E6%B3%95"><span class="nav-number">8.5.</span> <span class="nav-text">Wait方法</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%82%B2%E8%A7%82%E9%94%81%E4%B8%8E%E4%B9%90%E8%A7%82%E9%94%81"><span class="nav-number">1.</span> <span class="nav-text">悲观锁与乐观锁</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS%E4%B8%8EABA"><span class="nav-number">1.1.</span> <span class="nav-text">CAS与ABA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Mutex"><span class="nav-number">2.</span> <span class="nav-text">sync.Mutex</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-RWMutex"><span class="nav-number">3.</span> <span class="nav-text">sync.RWMutex</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Cond"><span class="nav-number">4.</span> <span class="nav-text">sync.Cond</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Pool"><span class="nav-number">5.</span> <span class="nav-text">sync.Pool</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E"><span class="nav-number">5.1.</span> <span class="nav-text">声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">5.2.</span> <span class="nav-text">操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%A0%87%E5%87%86%E5%BA%93%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">5.3.</span> <span class="nav-text">在标准库的应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Once"><span class="nav-number">6.</span> <span class="nav-text">sync.Once</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">6.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#done%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AD%97%E6%AE%B5"><span class="nav-number">6.2.</span> <span class="nav-text">done为什么是第一个字段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-Mutex%E5%AE%9E%E7%8E%B0%E5%85%AC%E5%B9%B3"><span class="nav-number">7.</span> <span class="nav-text">sync.Mutex实现公平</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sync-WaitGroup"><span class="nav-number">8.</span> <span class="nav-text">sync.WaitGroup</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">8.1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90"><span class="nav-number">8.2.</span> <span class="nav-text">注意内存对齐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add%E6%96%B9%E6%B3%95"><span class="nav-number">8.3.</span> <span class="nav-text">Add方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Done%E6%96%B9%E6%B3%95%EF%BC%88%E5%A4%8D%E7%94%A8ADD%EF%BC%89"><span class="nav-number">8.4.</span> <span class="nav-text">Done方法（复用ADD）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wait%E6%96%B9%E6%B3%95"><span class="nav-number">8.5.</span> <span class="nav-text">Wait方法</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -234,7 +234,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-07 14:12:26" itemprop="dateModified" datetime="2022-03-07T14:12:26+08:00">2022-03-07</time>
+        <time title="修改时间：2022-03-09 20:10:11" itemprop="dateModified" datetime="2022-03-09T20:10:11+08:00">2022-03-09</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -253,7 +253,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.8k</span>
+      <span>7.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -281,6 +281,9 @@
 <li>版本号。数据每次更新，版本号都会更新，记下初始时的版本号，要修改前查看版本号，跟之前的不一样就说明有其他线程修改了该数据，本线程不再更新，更新失败。</li>
 <li>CAS算法。思路是用三个变量：需要读写的内存位置V、进行比较的预期原值A、拟写入的新值B。如果位置V的值仍为预期的A时说明没有其他线程改动它，可以修改为新值B，否则不做修改。</li>
 </ol>
+<h2 id="CAS与ABA"><a href="#CAS与ABA" class="headerlink" title="CAS与ABA"></a>CAS与ABA</h2><p>CAS：对于内存中的某一个值V，提供一个旧值A和一个新值B。如果提供的旧值V和A相等就把B写入V。这个过程是原子性的。</p>
+<p>CAS执行结果要么成功要么失败，对于失败的情形下一班采用不断重试。或者放弃。</p>
+<p>ABA：如果另一个线程修改V值假设原来是A，先修改成B，再修改回成A。当前线程的CAS操作无法分辨当前V值是否发生过变化。</p>
 <h1 id="sync-Mutex"><a href="#sync-Mutex" class="headerlink" title="sync.Mutex"></a>sync.Mutex</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Mutex <span class="keyword">struct</span> &#123;</span><br><span class="line">	state <span class="keyword">int32</span></span><br><span class="line">	sema  <span class="keyword">uint32</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <img src="/2022/02/22/golang-%E9%94%81/golang-mutex-state.png" class="" title="[golang-mutex-state]">
@@ -456,13 +459,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">118k</span>
+    <span title="站点总字数">121k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:47</span>
+    <span title="站点阅读时长">1:50</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

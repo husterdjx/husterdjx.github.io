@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/%E5%86%99%E5%B1%8F%E9%9A%9C.png">
 <meta property="article:published_time" content="2022-02-22T14:03:02.000Z">
-<meta property="article:modified_time" content="2022-02-26T05:41:20.122Z">
+<meta property="article:modified_time" content="2022-03-09T15:17:13.221Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -124,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E5%9F%BA%E7%A1%80%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="nav-number">1.1.</span> <span class="nav-text">三种基础的垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%EF%BC%88Mark-and-Sweep%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">标记清除（Mark and Sweep）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E6%94%B6%E9%9B%86%EF%BC%88Copy-and-Collection%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制收集（Copy and Collection）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-number">1.1.3.</span> <span class="nav-text">引用计数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4-%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0-%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="nav-number">1.2.</span> <span class="nav-text">Go语言的标记清除+三色标记+写屏障</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E5%9F%BA%E7%A1%80%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="nav-number">1.1.</span> <span class="nav-text">三种基础的垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%EF%BC%88Mark-and-Sweep%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">标记清除（Mark and Sweep）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E6%94%B6%E9%9B%86%EF%BC%88Copy-and-Collection%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">复制收集（Copy and Collection）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="nav-number">1.1.3.</span> <span class="nav-text">引用计数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4-%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0-%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="nav-number">1.2.</span> <span class="nav-text">Go语言的标记清除+三色标记+写屏障</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.2.1.</span> <span class="nav-text">触发条件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%E8%A7%A6%E5%8F%91"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">后台触发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">手动触发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">申请内存</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -234,7 +234,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-02-26 13:41:20" itemprop="dateModified" datetime="2022-02-26T13:41:20+08:00">2022-02-26</time>
+        <time title="修改时间：2022-03-09 23:17:13" itemprop="dateModified" datetime="2022-03-09T23:17:13+08:00">2022-03-09</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -253,14 +253,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
+      <span>4.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>4 分钟</span>
     </span>
 </div>
 
@@ -306,11 +306,49 @@
 <p>Go 使用了内存屏障技术，它是在用户程序读取对象、创建新对象以及更新对象指针时执行的一段代码，类似于一个钩子。垃圾收集器使用了写屏障（Write Barrier）技术，当对象新增或更新时，会将其着色为灰色。这样即使与用户程序并发执行，对象的引用发生改变时，垃圾收集器也能正确处理了。</p>
 <p>全部流程：</p>
 <ul>
-<li>1）标记准备(Mark Setup，需 STW)，打开写屏障(Write Barrier)</li>
-<li>2）使用三色标记法标记（Marking, 并发）</li>
-<li>3）标记结束(Mark Termination，需 STW)，关闭写屏障。</li>
-<li>4）清理(Sweeping, 并发)</li>
+<li>清理终止阶段；<ol>
+<li><strong>暂停程序</strong>，所有的处理器在这时会进入安全点（Safe point）；</li>
+<li>如果当前垃圾收集循环是强制触发的，我们还需要处理还未被清理的内存管理单元；</li>
+</ol>
+</li>
+<li>标记阶段；<ol>
+<li>将状态切换至 <code>_GCmark</code>、<strong>开启写屏障</strong>、用户程序协助（Mutator Assists）并将根对象入队；</li>
+<li>恢复执行程序，标记进程和用于协助的用户程序会开始并发标记内存中的对象，写屏障会将被覆盖的指针和新指针都标记成灰色，而所有新创建的对象都会被直接标记成黑色；</li>
+<li>开始扫描根对象，包括所有 Goroutine 的栈、全局对象以及不在堆中的运行时数据结构，<strong>扫描 Goroutine 栈期间会暂停当前处理器</strong>；</li>
+<li>依次处理灰色队列中的对象，将对象标记成黑色并将它们指向的对象标记成灰色；</li>
+<li>使用分布式的终止算法检查剩余的工作，发现标记阶段完成后进入标记终止阶段；</li>
+</ol>
+</li>
+<li>标记终止阶段；<ol>
+<li><strong>暂停程序</strong>、将状态切换至 <code>_GCmarktermination</code> 并关闭辅助标记的用户程序；</li>
+<li>清理处理器上的线程缓存；</li>
+</ol>
+</li>
+<li>清理阶段；<ol>
+<li>将状态切换至 <code>_GCoff</code> 开始清理阶段，初始化清理状态并<strong>关闭写屏障</strong>；</li>
+<li>恢复用户程序，所有新创建的对象会标记成白色；</li>
+<li>后台并发清理所有的内存管理单元，当 Goroutine 申请新的内存管理单元时就会触发清理；</li>
+</ol>
+</li>
 </ul>
+<h3 id="触发条件"><a href="#触发条件" class="headerlink" title="触发条件"></a>触发条件</h3><p>所有触发都会调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.gcTrigger.test"><code>runtime.gcTrigger.test</code></a> 方法决定是否需要触发垃圾收集：</p>
+<p>即<strong>允许垃圾收集、程序没有崩溃并且没有处于垃圾收集循环</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t gcTrigger)</span> <span class="title">test</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> !memstats.enablegc || panicking != <span class="number">0</span> || gcphase != _GCoff &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">switch</span> t.kind &#123;		<span class="comment">//根据kind判断</span></span><br><span class="line">	<span class="keyword">case</span> gcTriggerHeap:		<span class="comment">//堆内存的分配达到控制器计算的触发堆大小</span></span><br><span class="line">		<span class="keyword">return</span> memstats.heap_live &gt;= memstats.gc_trigger</span><br><span class="line">	<span class="keyword">case</span> gcTriggerTime:		<span class="comment">//如果一定时间内没有触发，就会触发新的循环，该触发条件由 runtime.forcegcperiod 变量控制，默认为 2 分钟</span></span><br><span class="line">		<span class="keyword">if</span> gcpercent &lt; <span class="number">0</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">		lastgc := <span class="keyword">int64</span>(atomic.Load64(&amp;memstats.last_gc_nanotime))</span><br><span class="line">		<span class="keyword">return</span> lastgc != <span class="number">0</span> &amp;&amp; t.now-lastgc &gt; forcegcperiod</span><br><span class="line">	<span class="keyword">case</span> gcTriggerCycle:	<span class="comment">//如果当前没有开启垃圾收集，则触发新的循环</span></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">int32</span>(t.n-work.cycles) &gt; <span class="number">0</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="后台触发"><a href="#后台触发" class="headerlink" title="后台触发"></a>后台触发</h4><p>运行时会在应用程序启动时在后台开启一个用于强制触发垃圾收集的 Goroutine <code>forcegchelper()</code>。它循环调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.gcStart"><code>runtime.gcStart</code></a> 尝试启动新一轮的垃圾收集。</p>
+<p>为了减少对计算资源的占用，该Goroutine会在循环中主动陷入休眠<strong>等待系统监控</strong>的Goroutine唤醒。系统监控会在每一个大循环里面创建一个<code>gcTrigger</code>并检查垃圾收集的触发条件是否满足。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sysmon</span><span class="params">()</span></span> &#123;</span><br><span class="line">	...</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		...</span><br><span class="line">		<span class="keyword">if</span> t := (gcTrigger&#123;kind: gcTriggerTime, now: now&#125;); t.test() &amp;&amp; atomic.Load(&amp;forcegc.idle) != <span class="number">0</span> &#123;</span><br><span class="line">			lock(&amp;forcegc.lock)</span><br><span class="line">			forcegc.idle = <span class="number">0</span></span><br><span class="line">			<span class="keyword">var</span> list gList</span><br><span class="line">			list.push(forcegc.g)</span><br><span class="line">			injectglist(&amp;list)</span><br><span class="line">			unlock(&amp;forcegc.lock)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="手动触发"><a href="#手动触发" class="headerlink" title="手动触发"></a>手动触发</h4><p>用户程序会通过 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.GC"><code>runtime.GC</code></a> 函数在程序运行期间主动通知运行时执行，该方法在调用时会阻塞调用方直到当前垃圾收集循环完成，在垃圾收集期间也可能会通过 STW 暂停整个程序。</p>
+<h4 id="申请内存"><a href="#申请内存" class="headerlink" title="申请内存"></a>申请内存</h4><p>运行时会将堆上的对象按大小分成微对象、小对象和大对象三类。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mallocgc</span><span class="params">(size <span class="keyword">uintptr</span>, typ *_type, needzero <span class="keyword">bool</span>)</span> <span class="title">unsafe</span>.<span class="title">Pointer</span></span> &#123;</span><br><span class="line">	shouldhelpgc := <span class="literal">false</span></span><br><span class="line">	...</span><br><span class="line">	<span class="keyword">if</span> size &lt;= maxSmallSize &#123;</span><br><span class="line">		<span class="keyword">if</span> noscan &amp;&amp; size &lt; maxTinySize &#123;		<span class="comment">//微对象创建会调用nextFreeFast进行快速分配，如果失败就会从中心缓存或者页堆中获取新的管理单元</span></span><br><span class="line">			...</span><br><span class="line">			v := nextFreeFast(span)</span><br><span class="line">			<span class="keyword">if</span> v == <span class="number">0</span> &#123;</span><br><span class="line">				v, _, shouldhelpgc = c.nextFree(tinySpanClass)</span><br><span class="line">			&#125;</span><br><span class="line">			...</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;	<span class="comment">//小对象创建</span></span><br><span class="line">			...</span><br><span class="line">			v := nextFreeFast(span)</span><br><span class="line">			<span class="keyword">if</span> v == <span class="number">0</span> &#123;</span><br><span class="line">				v, span, shouldhelpgc = c.nextFree(spc)</span><br><span class="line">			&#125;</span><br><span class="line">		  ...</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		shouldhelpgc = <span class="literal">true</span>		<span class="comment">//大对象一定会触发垃圾收集</span></span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">	<span class="keyword">if</span> shouldhelpgc &#123;</span><br><span class="line">		<span class="keyword">if</span> t := (gcTrigger&#123;kind: gcTriggerHeap&#125;); t.test() &#123;</span><br><span class="line">			gcStart(t)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>当前线程的内存管理单元中不存在空闲空间时，创建微对象和小对象需要调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.mcache.nextFree"><code>runtime.mcache.nextFree</code></a> 从中心缓存或者页堆中获取新的管理单元，在这时就可能触发垃圾收集；</li>
+<li>当用户程序申请分配 32KB 以上的大对象时，一定会构建 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.gcTrigger"><code>runtime.gcTrigger</code></a> 结构体尝试触发垃圾收集；</li>
+</ol>
 
     </div>
 
@@ -383,13 +421,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">118k</span>
+    <span title="站点总字数">121k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:47</span>
+    <span title="站点阅读时长">1:50</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
