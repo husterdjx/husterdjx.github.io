@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/GMP.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png">
 <meta property="article:published_time" content="2022-02-21T03:14:49.000Z">
-<meta property="article:modified_time" content="2022-03-08T11:31:33.917Z">
+<meta property="article:modified_time" content="2022-03-09T02:54:17.484Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -126,7 +126,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GM%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">GM模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GMP%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">GMP模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">协程调度原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9GM%E5%81%9A%E5%87%BA%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">相对GM做出的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E8%AE%BEP%E5%B1%82%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.3.</span> <span class="nav-text">增设P层的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E6%97%B6%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="nav-number">2.4.</span> <span class="nav-text">阻塞时的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.4.1.</span> <span class="nav-text">网络请求导致Goroutine阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.4.2.</span> <span class="nav-text">IO操作导致Goroutine阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E6%8C%82%E8%B5%B7%EF%BC%88%E5%A6%82sleep%EF%BC%89%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.4.3.</span> <span class="nav-text">主动挂起（如sleep）操作导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A2%AB%E5%94%A4%E9%86%92"><span class="nav-number">2.4.3.1.</span> <span class="nav-text">如何被唤醒</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.4.4.</span> <span class="nav-text">系统调用导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.4.4.1.</span> <span class="nav-text">系统调用的准备工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.4.4.2.</span> <span class="nav-text">恢复工作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E4%BD%9C%E5%BC%8F%E8%B0%83%E5%BA%A6"><span class="nav-number">2.5.</span> <span class="nav-text">协作式调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E7%94%A8%E6%88%B7%E8%AE%A9%E6%9D%83%EF%BC%9AGosched"><span class="nav-number">2.5.1.</span> <span class="nav-text">主动用户让权：Gosched</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GM%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">GM模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GMP%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">GMP模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">协程调度原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#M"><span class="nav-number">2.2.</span> <span class="nav-text">M</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P"><span class="nav-number">2.3.</span> <span class="nav-text">P</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#G"><span class="nav-number">2.4.</span> <span class="nav-text">G</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9GM%E5%81%9A%E5%87%BA%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">2.5.</span> <span class="nav-text">相对GM做出的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E8%AE%BEP%E5%B1%82%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.6.</span> <span class="nav-text">增设P层的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E6%97%B6%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="nav-number">2.7.</span> <span class="nav-text">阻塞时的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.1.</span> <span class="nav-text">网络请求导致Goroutine阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.2.</span> <span class="nav-text">IO操作导致Goroutine阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E6%8C%82%E8%B5%B7%EF%BC%88%E5%A6%82sleep%EF%BC%89%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.3.</span> <span class="nav-text">主动挂起（如sleep）操作导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A2%AB%E5%94%A4%E9%86%92"><span class="nav-number">2.7.3.1.</span> <span class="nav-text">如何被唤醒</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-number">2.7.3.1.1.</span> <span class="nav-text">调度器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7"><span class="nav-number">2.7.3.1.2.</span> <span class="nav-text">系统监控</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.4.</span> <span class="nav-text">系统调用导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.7.4.1.</span> <span class="nav-text">系统调用的准备工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.7.4.2.</span> <span class="nav-text">恢复工作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E4%BD%9C%E5%BC%8F%E8%B0%83%E5%BA%A6"><span class="nav-number">2.8.</span> <span class="nav-text">协作式调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E7%94%A8%E6%88%B7%E8%AE%A9%E6%9D%83%EF%BC%9AGosched"><span class="nav-number">2.8.1.</span> <span class="nav-text">主动用户让权：Gosched</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -236,7 +236,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-08 19:31:33" itemprop="dateModified" datetime="2022-03-08T19:31:33+08:00">2022-03-08</time>
+        <time title="修改时间：2022-03-09 10:54:17" itemprop="dateModified" datetime="2022-03-09T10:54:17+08:00">2022-03-09</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -255,7 +255,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>3.9k</span>
+      <span>4.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -305,20 +305,17 @@
 </ol>
 <h2 id="协程调度原理"><a href="#协程调度原理" class="headerlink" title="协程调度原理"></a>协程调度原理</h2><img src="/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png" class="" title="[协程调度原理]">
 
-<p>M:</p>
-<ol>
+<h2 id="M"><a href="#M" class="headerlink" title="M"></a>M</h2><ol>
 <li>一个M在其生命周期中，只会和一个内核线程关联，所以不会出现对内核线程的频繁切换。</li>
 <li>Golang的运行时执行系统监控和垃圾回收等任务时候会导致创建M，<strong>M空闲时不会被销毁</strong>，而是放到一个<code>调度器的空闲M列表</code>中，等待与P关联，M默认数量为10000</li>
 </ol>
-<p>P：</p>
-<ol>
+<h2 id="P"><a href="#P" class="headerlink" title="P"></a>P</h2><ol>
 <li>当P没有可运行的G时候（P的可运行G队列为空），P会被放到<code>调度器的空闲P列表</code>中，等待M与它关联；</li>
-<li>P表示逻辑处理器，对 G 来说，P 相当于 CPU 核，G 只有绑定到 P 才能被调度。对 M 来说，P 提供了相关的执行环境(Context)，如内存分配状态(mcache)，任务队列(G)等。</li>
+<li>调度器中的处理器 P 是线程和 Goroutine 的中间层，它能提供线程需要的上下文环境，也会负责<strong>调度</strong>线程上的等待队列。<strong>P是作为调度器的内部实现。</strong></li>
 </ol>
-<p>G:</p>
-<ol>
+<h2 id="G"><a href="#G" class="headerlink" title="G"></a>G</h2><ol>
 <li>每个P中有<code>可运行的G队列</code>和<code>自由G列表</code>，当G的代码执行完后，该G不会被销毁，而是被放到<code>P的自由G列表</code>或<code>调度器的自由G列表</code>。如果程序新建了Go协程，调度器会在自由G列表中取一个G，然后把Go协程的函数赋值到G中（如果自由G列表为空，就创建一个G）；</li>
-<li>一般情况，当G运行时间超过10ms后，该G就会被系统告知需要停止了，让其他G运行。但有三种情况该G不需要停止：<ul>
+<li><strong>一般情况，当G运行时间超过10ms后，该G就会被系统告知需要停止了</strong>，让其他G运行。但有三种情况该G不需要停止：<ul>
 <li>P的可运行G队列为空（没有其他G可运行）</li>
 <li>有空闲的M在寻找可运行的G（没有其他G可运行）</li>
 <li>空闲的P（还有P闲着）</li>
@@ -348,13 +345,26 @@
 <h3 id="IO操作导致Goroutine阻塞"><a href="#IO操作导致Goroutine阻塞" class="headerlink" title="IO操作导致Goroutine阻塞"></a>IO操作导致Goroutine阻塞</h3><p>G1使用syscall时，调度器会将M1与P分离，引入新的M2（创建或者从休眠队列里面取出一个M2）来绑定P。</p>
 <p>阻塞的系统调用完成后：G1 可以移回 LRQ 并再次由 P 执行。如果这种情况再次发生，M1 将被放在旁边以备将来重复使用。</p>
 <h3 id="主动挂起（如sleep）操作导致Goroutine阻塞"><a href="#主动挂起（如sleep）操作导致Goroutine阻塞" class="headerlink" title="主动挂起（如sleep）操作导致Goroutine阻塞"></a>主动挂起（如sleep）操作导致Goroutine阻塞</h3><p>golang优化了time.Sleep()方法，避免其进行系统调用从而带来一些系统级别的开销。</p>
-<p>当我们在goroutine中调用time.Sleep()方法时，<strong>底层会创建一个 timer, 并将当前goroutine与timer进行绑定</strong>，并提供一个唤醒该goroutine的方法<code>goroutineReady</code>。</p>
-<p>然后通过<code>addtimerLocked</code>方法启动每个P对应的<strong>全局时间事件驱动器</strong><code>timerproc</code> 并将timer加入到全局timer管理器中(timer 通过<strong>最小堆</strong>的数据结构存放每个定时器)，且每一个加入到timer管理器中的timer都会被按唤醒时间进行排序，最早需要唤醒的timer排在最前面。</p>
+<p>当我们在goroutine中调用time.Sleep()方法时，<strong>底层会创建一个 timer, 并将当前goroutine与timer进行绑定</strong>，并提供一个唤醒该goroutine的方法<code>goroutineReady</code>，该方法会存在被创建的timer结构体中。</p>
+<p>然后将timer加入到<strong>每个P对应的单独管理计时器</strong>中(通过<strong>最小四叉堆</strong>的数据结构存放每个定时器在<code>runtime.p</code>中)，且每一个加入到timer管理器中的timer都会被按唤醒时间进行排序，最早需要唤醒的timer排在最前面。</p>
 <p>再通过<strong>gopark()方法</strong>将当前goroutine状态标记为为**_Gwaiting<strong>，</strong>解除G与M的绑定关系<strong>，</strong>调用schedule()函数**，重新选择一个goroutine去执行。</p>
 <p>此时被挂起的Goroutine不在任何运行队列上。</p>
 <h4 id="如何被唤醒"><a href="#如何被唤醒" class="headerlink" title="如何被唤醒"></a>如何被唤醒</h4><p>对睡眠线程的定时器的监控由调度器和系统监控共同执行。</p>
-<p>timer管理器会寻找timer定时管理器的第一个timer并判断唤醒条件，满足条件后通过调用<code>goroutineReady</code>方法进行唤醒。运行时会调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.goready"><code>runtime.goready</code></a> 将因为调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.gopark"><code>runtime.gopark</code></a> 而陷入休眠的 Goroutine 唤醒。</p>
-<p><a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.ready"><code>runtime.ready</code></a> 会将准备就绪的 Goroutine 的状态切换至 <code>_Grunnable</code> 并将其加<strong>入处理器的运行队列</strong>中，等待调度器的调度。</p>
+<h5 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h5><p>调度器处理计时器，即调用<code>runtime.checkTimers</code>的场景：（这个函数是针对某一个P的检查）</p>
+<ul>
+<li>调度器调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.schedule"><code>runtime.schedule</code></a> 执行调度时；</li>
+<li>调度器调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.findrunnable"><code>runtime.findrunnable</code></a> 获取可执行的 Goroutine 时；</li>
+<li>调度器调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.findrunnable"><code>runtime.findrunnable</code></a> 从其他处理器窃取计时器时；</li>
+</ul>
+<p>调度器在checkTimers中会实现调整计时器、运行计时器和删除计时器。</p>
+<h5 id="系统监控"><a href="#系统监控" class="headerlink" title="系统监控"></a>系统监控</h5><p>系统监控函数 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.sysmon"><code>runtime.sysmon</code></a> 也可能会触发函数的计时器。</p>
+<ol>
+<li>调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.timeSleepUntil"><code>runtime.timeSleepUntil</code></a> 获取计时器的到期时间以及持有该计时器的堆。这会遍历运行时的全部处理器并查找下一个需要执行的计时器。</li>
+<li>如果超过 10ms 的时间没有轮询，调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.netpoll"><code>runtime.netpoll</code></a> 轮询网络；</li>
+<li>如果当前有应该运行的计时器没有执行，可能存在无法被抢占的处理器，这时我们应该启动新的线程处理计时器；</li>
+</ol>
+<p>满足条件后通过调用<code>goroutineReady</code>方法进行唤醒。运行时会调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.goready"><code>runtime.goready</code></a> 将因为调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.gopark"><code>runtime.gopark</code></a> 而陷入休眠的 Goroutine 唤醒。</p>
+<p><a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.ready"><code>runtime.ready</code></a> 会将准备就绪的 Goroutine 的状态切换至 <code>_Grunnable</code> 并将其加入<strong>处理器的运行队列</strong>中（不会立刻执行），等待调度器的调度。</p>
 <h3 id="系统调用导致Goroutine阻塞"><a href="#系统调用导致Goroutine阻塞" class="headerlink" title="系统调用导致Goroutine阻塞"></a>系统调用导致Goroutine阻塞</h3><h4 id="系统调用的准备工作"><a href="#系统调用的准备工作" class="headerlink" title="系统调用的准备工作"></a>系统调用的准备工作</h4><ol>
 <li>禁止线程上发生的抢占，防止出现内存不一致的问题；</li>
 <li>保证当前函数不会触发栈分裂或者增长；</li>
@@ -377,7 +387,7 @@
 <p><strong>慢速（在于oldp关联失败并且无法重新获得新的P时）：</strong></p>
 <p>如果所有的 <code>P</code> 都处于繁忙状态，可能无法获取空闲的P。</p>
 <p>这时G0会将G与M解绑，把G放入<strong>全局G的可运行队列</strong>，把M放入<strong>全局空闲M列表</strong>。</p>
-<h2 id="协作式调度"><a href="#协作式调度" class="headerlink" title="协作式调度"></a>协作式调度</h2><h3 id="主动用户让权：Gosched"><a href="#主动用户让权：Gosched" class="headerlink" title="主动用户让权：Gosched"></a>主动用户让权：Gosched</h3><p>Gosched 会让出当前的 P，并允许其他 Goroutine 运行。</p>
+<h2 id="协作式调度"><a href="#协作式调度" class="headerlink" title="协作式调度"></a>协作式调度</h2><h3 id="主动用户让权：Gosched"><a href="#主动用户让权：Gosched" class="headerlink" title="主动用户让权：Gosched"></a>主动用户让权：Gosched</h3><p>Gosched 会让出当前的 P，并允许其他 Goroutine 运行。运行时会更新 Goroutine 的状态到 <code>_Grunnable</code>，让出当前的处理器并将 Goroutine 重新放回<strong>全局队列</strong>。</p>
 
     </div>
 
