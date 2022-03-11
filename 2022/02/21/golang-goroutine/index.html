@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/GMP.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png">
 <meta property="article:published_time" content="2022-02-21T03:14:49.000Z">
-<meta property="article:modified_time" content="2022-03-11T07:47:10.010Z">
+<meta property="article:modified_time" content="2022-03-11T14:53:50.423Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -126,7 +126,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GM%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">GM模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GMP%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">GMP模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">协程调度原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#M"><span class="nav-number">2.2.</span> <span class="nav-text">M</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P"><span class="nav-number">2.3.</span> <span class="nav-text">P</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#G"><span class="nav-number">2.4.</span> <span class="nav-text">G</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9GM%E5%81%9A%E5%87%BA%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">2.5.</span> <span class="nav-text">相对GM做出的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E8%AE%BEP%E5%B1%82%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.6.</span> <span class="nav-text">增设P层的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E6%97%B6%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="nav-number">2.7.</span> <span class="nav-text">阻塞时的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E6%88%96IO%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.1.</span> <span class="nav-text">网络请求或IO操作导致Goroutine阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E6%8C%82%E8%B5%B7%EF%BC%88%E5%A6%82sleep%EF%BC%89%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.2.</span> <span class="nav-text">主动挂起（如sleep）操作导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A2%AB%E5%94%A4%E9%86%92"><span class="nav-number">2.7.2.1.</span> <span class="nav-text">如何被唤醒</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-number">2.7.2.1.1.</span> <span class="nav-text">调度器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7"><span class="nav-number">2.7.2.1.2.</span> <span class="nav-text">系统监控</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.3.</span> <span class="nav-text">系统调用导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.7.3.1.</span> <span class="nav-text">系统调用的准备工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.7.3.2.</span> <span class="nav-text">恢复工作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E4%BD%9C%E5%BC%8F%E8%B0%83%E5%BA%A6"><span class="nav-number">2.8.</span> <span class="nav-text">协作式调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E7%94%A8%E6%88%B7%E8%AE%A9%E6%9D%83%EF%BC%9AGosched"><span class="nav-number">2.8.1.</span> <span class="nav-text">主动用户让权：Gosched</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%BD%AE%E8%AF%A2%E5%99%A8"><span class="nav-number">2.9.</span> <span class="nav-text">网络轮询器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8netpoll%E8%BF%87%E7%A8%8B"><span class="nav-number">2.9.1.</span> <span class="nav-text">调用netpoll过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7-1"><span class="nav-number">2.10.</span> <span class="nav-text">系统监控</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GM%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">GM模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GMP%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">GMP模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">协程调度原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#M"><span class="nav-number">2.2.</span> <span class="nav-text">M</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P"><span class="nav-number">2.3.</span> <span class="nav-text">P</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#G"><span class="nav-number">2.4.</span> <span class="nav-text">G</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9GM%E5%81%9A%E5%87%BA%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">2.5.</span> <span class="nav-text">相对GM做出的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E8%AE%BEP%E5%B1%82%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.6.</span> <span class="nav-text">增设P层的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E6%97%B6%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="nav-number">2.7.</span> <span class="nav-text">阻塞时的行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E6%88%96IO%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.1.</span> <span class="nav-text">网络请求或IO操作导致Goroutine阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E6%8C%82%E8%B5%B7%EF%BC%88%E5%A6%82sleep%EF%BC%89%E6%93%8D%E4%BD%9C%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.2.</span> <span class="nav-text">主动挂起（如sleep）操作导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A2%AB%E5%94%A4%E9%86%92"><span class="nav-number">2.7.2.1.</span> <span class="nav-text">如何被唤醒</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-number">2.7.2.1.1.</span> <span class="nav-text">调度器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7"><span class="nav-number">2.7.2.1.2.</span> <span class="nav-text">系统监控</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E5%AF%BC%E8%87%B4Goroutine%E9%98%BB%E5%A1%9E"><span class="nav-number">2.7.3.</span> <span class="nav-text">系统调用导致Goroutine阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.7.3.1.</span> <span class="nav-text">系统调用的准备工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.7.3.2.</span> <span class="nav-text">恢复工作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%8F%E4%BD%9C%E5%BC%8F%E8%B0%83%E5%BA%A6"><span class="nav-number">2.8.</span> <span class="nav-text">协作式调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%8A%A8%E7%94%A8%E6%88%B7%E8%AE%A9%E6%9D%83%EF%BC%9AGosched"><span class="nav-number">2.8.1.</span> <span class="nav-text">主动用户让权：Gosched</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E8%BD%AE%E8%AF%A2%E5%99%A8"><span class="nav-number">2.9.</span> <span class="nav-text">网络轮询器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8netpoll%E8%BF%87%E7%A8%8B"><span class="nav-number">2.9.1.</span> <span class="nav-text">调用netpoll过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7-1"><span class="nav-number">2.10.</span> <span class="nav-text">系统监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">2.11.</span> <span class="nav-text">定时器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8-1"><span class="nav-number">2.11.1.</span> <span class="nav-text">调度器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7-2"><span class="nav-number">2.11.2.</span> <span class="nav-text">系统监控</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -142,7 +142,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -236,7 +236,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-11 15:47:10" itemprop="dateModified" datetime="2022-03-11T15:47:10+08:00">2022-03-11</time>
+        <time title="修改时间：2022-03-11 22:53:50" itemprop="dateModified" datetime="2022-03-11T22:53:50+08:00">2022-03-11</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -255,7 +255,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>5.2k</span>
+      <span>6k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -400,10 +400,15 @@
 <li><a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.netpollBreak"><code>runtime.netpollBreak</code></a> — 唤醒网络轮询器，例如：计时器向前修改时间时会通过该函数中断网络轮询器</li>
 <li><a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.netpollIsPollDescriptor"><code>runtime.netpollIsPollDescriptor</code></a> — 判断文件描述符是否被轮询器使用；</li>
 </ul>
-<h3 id="调用netpoll过程"><a href="#调用netpoll过程" class="headerlink" title="调用netpoll过程"></a>调用netpoll过程</h3><ol>
+<p>网络轮询器并不是由运行时中的某一个线程独立运行的，<strong>运行时的调度器和系统调用</strong>都会通过 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.netpoll"><code>runtime.netpoll</code></a> 与网络轮询器交换消息，获取待执行的 Goroutine 列表，并将待执行的 Goroutine 加入运行队列等待处理。</p>
+<p>所有的文件 I/O、网络 I/O 和计时器都是由网络轮询器管理的。</p>
+<h3 id="调用netpoll过程"><a href="#调用netpoll过程" class="headerlink" title="调用netpoll过程"></a>调用netpoll过程</h3><p>当我们在文件描述符上执行读写操作时，如果文件描述符不可读或者不可写，当前 Goroutine 会执行<a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.poll_runtime_pollWait"><code>runtime.poll_runtime_pollWait</code></a> 检查 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.pollDesc"><code>runtime.pollDesc</code></a> 的状态并调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.netpollblock"><code>runtime.netpollblock</code></a> 等待文件描述符的可读或者可写。这个block函数会调用<code>gopard()</code>出让线程，转到休眠状态。</p>
+<p>这之后这个休眠的Goroutine就没啥事了。</p>
+<p>运行时会在调度或者系统监控中调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.netpoll"><code>runtime.netpoll</code></a> 轮询网络：</p>
+<ol>
 <li>根据传入的 <code>delay</code> 计算 <code>epoll</code> 系统调用需要等待的时间。</li>
 <li>调用 <code>epollwait</code> 等待可读或者可写事件的发生。</li>
-<li>在循环中依次处理 <code>epollevent</code> 事件。如果这是一次正常的读写操作，将 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.pollDesc"><code>runtime.pollDesc</code></a> 中的读或者写信号量转换成 <code>pdReady</code> 并返回其中存储的 Goroutine（这里的Goroutine是被挂载在netpoll上的，处于Gwaiting状态）。返回的 Goroutine 列表都会被 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.injectglist"><code>runtime.injectglist</code></a> 注入到处理器或者全局的运行队列上。因为系统监控 Goroutine 直接运行在线程上，所以<strong>它获取的 Goroutine 列表</strong>会直接加入<strong>全局的运行队列</strong>，<strong>其他 Goroutine 获取的列表</strong>都会加入 Goroutine <strong>所在处理器的运行队列</strong>上。</li>
+<li>在循环中依次处理 <code>epollevent</code> 事件。如果这是一次正常的读写操作，将 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.pollDesc"><code>runtime.pollDesc</code></a> 中的读或者写信号量转换成 <code>pdReady</code> 并返回其中存储的 Goroutine（这里的Goroutine是被挂载在netpoll上的，处于休眠状态）。返回的 Goroutine 列表都会被 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.injectglist"><code>runtime.injectglist</code></a> 注入到处理器或者全局的运行队列上。因为系统监控 Goroutine 直接运行在线程上，所以<strong>它获取的 Goroutine 列表</strong>会直接加入<strong>全局的运行队列</strong>，<strong>其他 Goroutine 获取的列表</strong>都会加入 Goroutine <strong>所在处理器的运行队列</strong>上。</li>
 </ol>
 <h2 id="系统监控-1"><a href="#系统监控-1" class="headerlink" title="系统监控"></a>系统监控</h2><p>系统监控会在每次循环开始休眠，初始休眠事件为20μs，最长休眠时间为10ms；当系统监控在50个循环中都没有唤醒Goroutine时，休眠时间在每个循环倍增。</p>
 <p>当程序趋于稳定之后，系统监控的触发时间就会稳定在 10ms。它除了会检查死锁之外，还会在循环中完成以下的工作：</p>
@@ -413,6 +418,20 @@
 <li>抢占处理器 — 抢占运行时间较长的或者处于系统调用的 Goroutine；</li>
 <li>垃圾回收 — 在满足条件时触发垃圾收集回收内存；（详见<a href="https://husterdjx.github.io/2022/02/22/golang-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">golang-内存管理</a>)</li>
 </ul>
+<h2 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h2><p>计时器都交由网络轮询器（这其实也是调度器和系统监控来轮询的）和调度器触发，这种方式能够充分利用本地性、减少上下文的切换开销，也是目前性能最好的实现方式。</p>
+<h3 id="调度器-1"><a href="#调度器-1" class="headerlink" title="调度器"></a>调度器</h3><p>调度器处理计时器，即调用<code>runtime.checkTimers</code>的场景：（这个函数是<strong>针对本地P</strong>的检查）</p>
+<ul>
+<li>调度器调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.schedule"><code>runtime.schedule</code></a> 执行调度时；</li>
+<li>调度器调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.findrunnable"><code>runtime.findrunnable</code></a> 获取可执行的 Goroutine 时；</li>
+<li>调度器调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.findrunnable"><code>runtime.findrunnable</code></a> 从其他处理器窃取计时器时；</li>
+</ul>
+<p>调度器在checkTimers中会实现调整计时器、运行计时器和删除计时器。</p>
+<h3 id="系统监控-2"><a href="#系统监控-2" class="headerlink" title="系统监控"></a>系统监控</h3><p>系统监控函数 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.sysmon"><code>runtime.sysmon</code></a> 也可能会触发函数的计时器。</p>
+<ol>
+<li>调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.timeSleepUntil"><code>runtime.timeSleepUntil</code></a> 获取计时器的到期时间以及持有该计时器的堆。这会遍历运行时的全部处理器并查找下一个需要执行的计时器。</li>
+<li>如果超过 10ms 的时间没有轮询，调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.netpoll"><code>runtime.netpoll</code></a> 轮询网络；</li>
+<li>如果当前有应该运行的计时器没有执行，可能存在无法被抢占的处理器，这时我们应该启动新的线程处理计时器；</li>
+</ol>
 
     </div>
 
@@ -485,13 +504,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">126k</span>
+    <span title="站点总字数">129k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:55</span>
+    <span title="站点阅读时长">1:57</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

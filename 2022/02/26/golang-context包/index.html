@@ -28,7 +28,7 @@
 <meta property="og:description" content="上下文 Context 包就提供了一组在 Goroutine 间进行值传播的方法。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-02-26T05:40:15.000Z">
-<meta property="article:modified_time" content="2022-02-26T12:50:35.538Z">
+<meta property="article:modified_time" content="2022-03-11T15:20:01.539Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -121,7 +121,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#context-WithCancel"><span class="nav-number">1.</span> <span class="nav-text">context.WithCancel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context-WithValue"><span class="nav-number">2.</span> <span class="nav-text">context.WithValue</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context-WithTimeout"><span class="nav-number">3.</span> <span class="nav-text">context.WithTimeout</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context-WithDeadline"><span class="nav-number">4.</span> <span class="nav-text">context.WithDeadline</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#context-WithCancel"><span class="nav-number">1.</span> <span class="nav-text">context.WithCancel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context-WithValue"><span class="nav-number">2.</span> <span class="nav-text">context.WithValue</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context-WithTimeout"><span class="nav-number">3.</span> <span class="nav-text">context.WithTimeout</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context-WithDeadline"><span class="nav-number">4.</span> <span class="nav-text">context.WithDeadline</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context-Context"><span class="nav-number">5.</span> <span class="nav-text">context.Context</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86"><span class="nav-number">5.1.</span> <span class="nav-text">设计原理</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -137,7 +137,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -223,10 +223,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-02-26 13:40:15 / 修改时间：20:50:35" itemprop="dateCreated datePublished" datetime="2022-02-26T13:40:15+08:00">2022-02-26</time>
+      <time title="创建时间：2022-02-26 13:40:15" itemprop="dateCreated datePublished" datetime="2022-02-26T13:40:15+08:00">2022-02-26</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-03-11 23:20:01" itemprop="dateModified" datetime="2022-03-11T23:20:01+08:00">2022-03-11</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -244,7 +250,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
+      <span>2.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -265,7 +271,7 @@
         <p>上下文 Context 包就提供了一组在 Goroutine 间进行值传播的方法。</p>
 <span id="more"></span>
 
-<h1 id="context-WithCancel"><a href="#context-WithCancel" class="headerlink" title="context.WithCancel"></a>context.WithCancel</h1><p>WithCancel returns a copy of parent with a new Done channel</p>
+<h1 id="context-WithCancel"><a href="#context-WithCancel" class="headerlink" title="context.WithCancel"></a>context.WithCancel</h1><p>从 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/context.Context"><code>context.Context</code></a> 中衍生出一个新的子上下文并返回用于取消该上下文的函数。一旦我们执行返回的取消函数，当前上下文以及它的子上下文都会被取消，所有的 Goroutine 都会同步收到这一取消信号。</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">reqTask</span><span class="params">(ctx context.Context, name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> &lt;-ctx.Done():</span><br><span class="line">			fmt.Println(<span class="string">&quot;stop&quot;</span>, name)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			fmt.Println(name, <span class="string">&quot;send request&quot;</span>)</span><br><span class="line">			time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ctx, cancel := context.WithCancel(context.Background())</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">go</span> reqTask(ctx, <span class="string">&quot;worker1&quot;</span>)</span><br><span class="line">	<span class="keyword">go</span> reqTask(ctx, <span class="string">&quot;worker2&quot;</span>)</span><br><span class="line">	</span><br><span class="line">	time.Sleep(<span class="number">3</span> * time.Second)</span><br><span class="line">	cancel()</span><br><span class="line">	time.Sleep(<span class="number">3</span> * time.Second)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="context-WithValue"><a href="#context-WithValue" class="headerlink" title="context.WithValue"></a>context.WithValue</h1><ul>
@@ -283,6 +289,21 @@
 <li><code>context canceled</code>是由于调用了cancel()</li>
 <li><code>context deadline exceeded</code>是由于调用了WithDeadline()</li>
 </ul>
+<h1 id="context-Context"><a href="#context-Context" class="headerlink" title="context.Context"></a>context.Context</h1><p>上下文 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/context.Context"><code>context.Context</code></a> Go 语言中用来设置截止日期、同步信号，传递请求相关值的结构体。</p>
+<ol>
+<li><code>Deadline</code> — 返回 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/context.Context"><code>context.Context</code></a> 被取消的时间，也就是完成工作的截止日期；</li>
+<li><code>Done</code> — 返回一个 Channel，这个 Channel 会在当前工作完成或者上下文被取消后关闭，多次调用 <code>Done</code> 方法会返回同一个 Channel；</li>
+<li><code>Err</code>— 返回<code>context.Context</code>结束的原因，它只会在Done方法对应的 Channel 关闭时返回非空的值；<ol>
+<li>如果 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/context.Context"><code>context.Context</code></a> 被取消，会返回 <code>Canceled</code> 错误；</li>
+<li>如果 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/context.Context"><code>context.Context</code></a> 超时，会返回 <code>DeadlineExceeded</code> 错误；</li>
+</ol>
+</li>
+<li><code>Value</code> — 从 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/context.Context"><code>context.Context</code></a> 中获取键对应的值，对于同一个上下文来说，多次调用 <code>Value</code> 并传入相同的 <code>Key</code> 会返回相同的结果，该方法可以用来传递请求特定的数据；</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Context <span class="keyword">interface</span> &#123;</span><br><span class="line">	Deadline() (deadline time.Time, ok <span class="keyword">bool</span>)</span><br><span class="line">	Done() &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">	Err() error</span><br><span class="line">	Value(key <span class="keyword">interface</span>&#123;&#125;) <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="设计原理"><a href="#设计原理" class="headerlink" title="设计原理"></a>设计原理</h2><p>在 Goroutine 构成的树形结构中对信号进行同步以减少计算资源的浪费是 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/context.Context"><code>context.Context</code></a> 的最大作用。</p>
+<p>如果没有context.Context，当最上层的 Goroutine 因为某些原因执行失败时，下层的 Goroutine 由于没有接收到这个信号所以会继续工作；但是当我们正确地使用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/context.Context"><code>context.Context</code></a> 时，就可以在下层及时停掉无用的工作以减少额外资源的消耗。</p>
 
     </div>
 
@@ -355,13 +376,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">126k</span>
+    <span title="站点总字数">129k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:55</span>
+    <span title="站点阅读时长">1:57</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
