@@ -67,7 +67,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%BE%85%E5%8A%A9%E7%B4%A2%E5%BC%95.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E4%BD%8D%E5%9B%BE%E7%B4%A2%E5%BC%95.png">
 <meta property="article:published_time" content="2022-02-17T07:32:46.000Z">
-<meta property="article:modified_time" content="2022-03-10T13:04:03.242Z">
+<meta property="article:modified_time" content="2022-03-10T15:19:37.167Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="找工">
 <meta name="twitter:card" content="summary">
@@ -177,7 +177,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -188,7 +188,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -271,7 +271,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-10 21:04:03" itemprop="dateModified" datetime="2022-03-10T21:04:03+08:00">2022-03-10</time>
+        <time title="修改时间：2022-03-10 23:19:37" itemprop="dateModified" datetime="2022-03-10T23:19:37+08:00">2022-03-10</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -290,7 +290,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>42k</span>
+      <span>43k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -1270,7 +1270,7 @@
 <p>进程是资源分配的基本单位。线程是独立调度的基本单位。</p>
 <ul>
 <li><p>拥有资源</p>
-<p>进程是资源分配的基本单位，但是线程不拥有资源，线程可以访问隶属进程的资源。</p>
+<p>进程下多个线程间共享虚拟内存、⽂件描述符、信号处理⽅式等资源，但进程间拥有独⽴的虚拟内存、⽂件描述符与信号处理等资源。在创 建线程时，由于虚拟内存、⽂件描述符等资源共享，故不需要进⾏额外的内存复制。当创建进程时，OS 使⽤ Copy-On-Write 的⽅式延迟 对内存内容的复制，但仍需要⼀些额外的开销。因此，尽管⼦进程可能在创建后⽴即调⽤ <code>exec()</code> 执⾏新的程序，其创建速度依然慢于线 程的创建速度</p>
 </li>
 <li><p>调度</p>
 <p>线程是独立调度的基本单位，在同一进程中，线程的切换不会引起进程切换，从一个进程中的线程切换到另一个进程中的线程时，会引起进程切换。</p>
@@ -1279,7 +1279,7 @@
 <p>由于创建或撤销进程时，系统都要为之分配或回收资源，如内存空间、I/O 设备等，所付出的开销远大于创建或撤销线程时的开销。类似地，在进行进程切换时，涉及当前执行进程 CPU 环境的保存及新调度进程 CPU 环境的设置，而线程切换时只需保存和设置少量寄存器内容，开销很小。</p>
 </li>
 <li><p>通信方面</p>
-<p>线程间可以通过直接读写同一进程中的数据进行通信，但是进程通信需要借助 IPC（进程间通信）。</p>
+<p>线程间可通过全局变量、互斥锁或者是条件变量来进⾏通信，但进程间只能使⽤管道、OS 提供的共享内存等进⾏通信，需要 投⼊更多的资源</p>
 </li>
 </ul>
 <h3 id="进程状态及相互切换"><a href="#进程状态及相互切换" class="headerlink" title="进程状态及相互切换"></a>进程状态及相互切换</h3><img src="/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/ProcessState.png" class="" title="[ProcessState]">
@@ -1319,6 +1319,7 @@
 <img src="/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/CFS.png" class="" title="[CFS的虚拟执行时间]">
 
 <p>以具有相同优先级的 I/O 密集型任务和 CPU 密集型任务为例 I/O 密集型任务通常在运⾏很短的时间以后就开始等待 I/O 事件并让出 CPU。而CPU 密集型 任务只要能拿到 CPU，就可能⼀直运行因此，⼀段时间以后，I/O 密集型任务的 vruntime 将小于 CPU 密集型任务的 vruntime，从而将拥有更⾼的调度优先级。这是合理的，因为该 I/O 任务很可能是交互程序，需要有更低的 响应延迟。</p>
+<p>为了能够更快的找到具有最⼩ vruntime 的进程，内核使⽤ RBTree 来保存已就绪的进程，也就是我们上⾯提到的就绪队列。</p>
 <h3 id="进程通信（IPC）"><a href="#进程通信（IPC）" class="headerlink" title="进程通信（IPC）"></a>进程通信（IPC）</h3><ol>
 <li><p>管道</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pipe</span><span class="params">(<span class="keyword">int</span> fd[<span class="number">2</span>])</span></span>;</span><br></pre></td></tr></table></figure>
