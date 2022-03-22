@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/chart-relation-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/chart-relation-16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="Linux内存管理之伙伴分配器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-伙伴分配器">
+<meta property="og:url" content="https://husterdjx.github.io/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/index.html">
+<meta property="og:site_name" content="huster-DJX">
+<meta property="og:description" content="Linux内存管理之伙伴分配器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/zone.png">
+<meta property="article:published_time" content="2022-03-22T07:39:34.000Z">
+<meta property="article:modified_time" content="2022-03-22T12:53:27.968Z">
+<meta property="article:author" content="huster-djx">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/zone.png">
+
+
+<link rel="canonical" href="https://husterdjx.github.io/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/","path":"2022/03/22/Linux-伙伴分配器/","title":"Linux-伙伴分配器"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux-伙伴分配器 | huster-DJX</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">huster-DJX</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">supproted by Git Pages</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%9A%84%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">基本的伙伴分配器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%8C%BA"><span class="nav-number">3.</span> <span class="nav-text">分区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%88%86%E9%85%8D%E6%A0%87%E5%BF%97%E5%BE%97%E5%88%B0%E9%A6%96%E9%80%89%E5%8C%BA%E5%9F%9F%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">根据分配标志得到首选区域类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%87%E7%94%A8%E5%8C%BA%E5%9F%9F"><span class="nav-number">3.2.</span> <span class="nav-text">备用区域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%9F%9F%E6%B0%B4%E7%BA%BF"><span class="nav-number">3.3.</span> <span class="nav-text">区域水线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E6%AD%A2%E8%BF%87%E5%BA%A6%E5%80%9F%E7%94%A8"><span class="nav-number">3.4.</span> <span class="nav-text">防止过度借用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E7%A7%BB%E5%8A%A8%E6%80%A7%E5%88%86%E7%BB%84"><span class="nav-number">4.</span> <span class="nav-text">可移动性分组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E5%A4%84%E7%90%86%E5%99%A8%E9%A1%B5%E9%9B%86%E5%90%88%EF%BC%88%E9%92%88%E5%AF%B9%E5%8D%95%E9%A1%B5%E5%88%86%E9%85%8D%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">每处理器页集合（针对单页分配）</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="huster-djx"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">huster-djx</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/husterdjx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;husterdjx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/76643896@qq.com" title="E-Mail → 76643896@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/husterdjx" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="huster-djx">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="huster-DJX">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux-伙伴分配器
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-03-22 15:39:34 / 修改时间：20:53:27" itemprop="dateCreated datePublished" datetime="2022-03-22T15:39:34+08:00">2022-03-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Linux内存管理之伙伴分配器</p>
+<span id="more"></span>
+
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>内核初始化完毕后，使用页分配管理器管理物理页，当前使用的页分配器是伙伴分配器。<br>连续的物理页称为<strong>页块（page block）</strong>。伙伴分配器只能分配2的n次幂个页，n称为阶（order），2的n次幂个连续页称为n阶页块。满足以下条件的两个n阶页块称为伙伴（buddy）：</p>
+<ul>
+<li>两个页块的物理地址是连续的</li>
+<li>页块的第一页的物理页号必须是2的n次幂的整数倍，如0号页，2号页，4号页，8号页…</li>
+<li>如果合并成(n+1)阶页块，第一页的物理页号必须是2的（n+1）次幂的整数倍。如两个1阶页块合并，第一页应是0，4，8，12…页。</li>
+</ul>
+<h1 id="基本的伙伴分配器"><a href="#基本的伙伴分配器" class="headerlink" title="基本的伙伴分配器"></a>基本的伙伴分配器</h1><p>伙伴分配器分配和释放物理页的数量单位是阶。分配n阶页块的过程如下。</p>
+<p>（1）查看是否有空闲的n阶页块，如果有，直接分配；如果没有，继续执行下一步。</p>
+<p>（2）查看是否存在空闲的（n+1）阶页块，如果有，把（n+1）阶页块分裂为两个n阶页块，一个插入空闲n阶页块链表，另一个分配出去；如果没有，继续执行下一步。</p>
+<p>（3）查看是否存在空闲的（n+2）阶页块，如果有，把（n+2）阶页块分裂为两个（n+1）阶页块，一个插入空闲（n+1）阶页块链表，另一个分裂为两个n阶页块，一个插入空闲n阶页块链表，另一个分配出去；如果没有，继续查看更高阶是否存在空闲页块。</p>
+<p>释放n阶页块时，查看它的伙伴是否空闲，如果伙伴不空闲，那么把n阶页块插入空闲的n阶页块链表；如果伙伴空闲，那么合并为（n+1）阶页块，接下来释放（n+1）阶页块。</p>
+<h1 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h1><p>分区的伙伴分配器专注于<strong>某个内存结点的某个区域</strong>。</p>
+<p>所以这里的数据结构是通过zone来展开的。</p>
+<img src="/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/zone.png" class="" title="[zone.png]">
+
+<p>freearea维护空闲页块，数组下标对应页块的阶数。结构体free_area的成员free_list是空闲页块的链表。nr_free是空闲页块的数量。内存区域的结构体成员managed_pages是伙伴分配器管理的物理页的数量，不包括引导内存分配器分配的物理页</p>
+<p>MAX_ORDER是最大阶数，实际上是可分配的最大阶数加1，默认值是11，意味着伙伴分配器一次最多可以分配2的10次方页。</p>
+<h2 id="根据分配标志得到首选区域类型"><a href="#根据分配标志得到首选区域类型" class="headerlink" title="根据分配标志得到首选区域类型"></a>根据分配标志得到首选区域类型</h2><p>申请页时，内核使用函数gfp_zone()根据分配标志得到首选的区域类型。</p>
+<h2 id="备用区域"><a href="#备用区域" class="headerlink" title="备用区域"></a>备用区域</h2><p>如果<strong>首选的内存节点和区域不能满足</strong>页分配请求，可以从备用的内存区域借用物理页，借用必须遵守以下原则。</p>
+<p>（1）一个内存节点的某个区域类型可以从另一个内存节点的<strong>相同区域类型</strong>借用物理页，例如节点0的普通区域可以从节点1的普通区域借用物理页。</p>
+<p>（2）高区域类型可以从低区域类型借用物理页，例如普通区域可以从DMA区域借用物理页。</p>
+<p>（3）低区域类型不能从高区域类型借用物理页，例如DMA区域不能从普通区域借用物理页。</p>
+<p><strong>不允许不同节点的不同区域相互借用。</strong></p>
+<p>UMA系统只有一个备用区域列表，按区域类型从高到低排序。假设UMA系统包含普通区域和DMA区域，那么备用区域列表是：｛普通区域，DMA区域｝。</p>
+<p>NUMA系统的每个内存节点有两个备用区域列表：一个包含所有内存节点的区域，另一个只包含当前内存节点的区域。如果申请页时指定标志__GFP_THISNODE，要求只能从指定内存节点分配物理页，就需要使用指定内存节点的第二个备用区域列表。</p>
+<h2 id="区域水线"><a href="#区域水线" class="headerlink" title="区域水线"></a>区域水线</h2><p>首选的内存区域在什么情况下从备用区域借用物理页？这个问题要从区域水线开始说起。每个内存区域有3个水线。</p>
+<p>（1）高水线（high）：如果内存区域的空闲页数大于高水线，说明该内存区域的内存充足。</p>
+<p>（2）低水线（low）：如果内存区域的空闲页数小于低水线，说明该内存区域的内存轻微不足。</p>
+<p>（3）最低水线（min）：如果内存区域的空闲页数小于最低水线，说明该内存区域的内存严重不足。</p>
+<p>在zone的数据结构中，由<code>unsigned long watermark[NR_WMARK]</code>字段表示。</p>
+<p>申请页时，第一次尝试使用低水线，如果首选的内存区域的空闲页数小于低水线，就从备用的内存区域借用物理页。如果第一次分配失败，那么唤醒所有目标内存节点的页回收内核线程kswapd以异步回收页，然后尝试使用最低水线。如果首选的内存区域的空闲页数小于最低水线，就从备用的内存区域借用物理页。</p>
+<h2 id="防止过度借用"><a href="#防止过度借用" class="headerlink" title="防止过度借用"></a>防止过度借用</h2><p>和高区域类型相比，低区域类型的内存相对少，是稀缺资源，而且有特殊用途，例如DMA区域用于外围设备和内存之间的数据传输。为了防止高区域类型过度借用低区域类型的物理页，低区域类型需要采取防卫措施，保留一定数量的物理页。</p>
+<p>在zone的数据结构中，由<code>long lowmen_reserve[MAX_NR_ZONES];</code>用于存放保留页数：zone[i]-&gt;lowmem_reserve[j]表示区域类型i应该保留多少页不能借给区域类型j，仅当j大于i时有意义。</p>
+<h1 id="可移动性分组"><a href="#可移动性分组" class="headerlink" title="可移动性分组"></a>可移动性分组</h1><p>内核使用直接映射的虚拟地址空间，连续的虚拟页必须映射到连续的物理页。内存碎片是伙伴分配器的一个弱点。</p>
+<p>为了预防内存碎片，内核根据可移动性把物理页分为3种类型。</p>
+<p>（1）不可移动页：位置必须固定，不能移动，直接映射到内核虚拟地址空间的页属于这一类。</p>
+<p>（2）可移动页：属于用户空间应用程序的页属于该类别。使用页表映射的页属于这一类，可以移动到其他位置，然后修改页表映射。</p>
+<p>（3）可回收页：不能移动，但可以回收，需要数据的时候可以重新从数据源获取。后备存储设备支持的页属于这一类。</p>
+<p>对伙伴分配器的数据结构的主要调整是把空闲链表拆分成每种迁移类型一条空闲链表。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">free_area</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> 	<span class="title">freelist</span>[<span class="title">MIGRATE_TYPES</span>];</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>		n</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>申请某种迁移类型的页时，如果这种迁移类型的页用完了，可以从其他迁移类型盗用（steal）物理页。</p>
+<h1 id="每处理器页集合（针对单页分配）"><a href="#每处理器页集合（针对单页分配）" class="headerlink" title="每处理器页集合（针对单页分配）"></a>每处理器页集合（针对单页分配）</h1><p>内核针对<strong>分配单页</strong>做了性能优化，为了<strong>减少处理器之间的锁竞争</strong>，在内存区域增加1个每处理器页集合。</p>
+<p>内存区域在每个处理器上有一个页集合，页集合中每种迁移类型有一个页链表。页集合有高水线和批量值，页集合中的页数量不能超过高水线。申请单页加入页链表，或者从页链表返还给伙伴分配器，都是采用批量操作，一次操作的页数量是批量值。</p>
+<p>从某个内存区域申请某种迁移类型的单页时，从当前处理器的页集合中该迁移类型的页链表分配页，如果页链表是空的，先批量申请页加入页链表，然后分配一页。</p>
+<p><strong>缓存热页</strong>是指刚刚访问过物理页，物理页的数据还在处理器的缓存中。<strong>如果要申请缓存热页，从页链表首部分配页；如果要申请缓存冷页，从页链表尾部分配页。</strong></p>
+<p>释放单页时，把页加入当前处理器的页集合中。如果释放缓存热页，加入页链表首部；如果释放缓存冷页，加入页链表尾部。如果页集合中的<strong>页数量大于或等于高水线</strong>，那么批量返还给伙伴分配器。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/images/wechat_channel.png">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/11/%E9%9D%A2%E8%AF%95%E6%99%BA%E5%8A%9B%E9%A2%98/" rel="prev" title="面试智力题">
+                  <i class="fa fa-chevron-left"></i> 面试智力题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/" rel="next" title="Linux-物理内存组织">
+                  Linux-物理内存组织 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">huster-djx</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">137k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:04</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

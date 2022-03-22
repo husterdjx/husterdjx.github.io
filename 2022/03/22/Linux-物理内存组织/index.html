@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/chart-relation-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/chart-relation-16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="如题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-物理内存组织">
+<meta property="og:url" content="https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/index.html">
+<meta property="og:site_name" content="huster-DJX">
+<meta property="og:description" content="如题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/x86-32%E5%8C%BA.png">
+<meta property="og:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/%E4%BD%8E%E7%BA%A7%E9%A1%B5%E5%88%86%E9%85%8D%E6%96%B9%E6%B3%95.png">
+<meta property="article:published_time" content="2022-03-22T07:45:59.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:53:22.263Z">
+<meta property="article:author" content="huster-djx">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/x86-32%E5%8C%BA.png">
+
+
+<link rel="canonical" href="https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/","path":"2022/03/22/Linux-物理内存组织/","title":"Linux-物理内存组织"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux-物理内存组织 | huster-DJX</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">huster-DJX</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">supproted by Git Pages</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E4%B8%80%E8%87%B4%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%EF%BC%88Non-Uniform-Memory-Access-NUMA%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">非一致内存访问（Non-Uniform Memory Access, NUMA）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%EF%BC%88Symmetric-Multi-Processor-SMP%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">对称多处理器（Symmetric Multi-Processor, SMP）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%B7%E9%87%8F%E5%B9%B6%E8%A1%8C%E5%A4%84%E7%90%86%E7%BB%93%E6%9E%84-Massive-Parallel-Processing%EF%BC%8CMPP"><span class="nav-number">1.3.</span> <span class="nav-text">海量并行处理结构(Massive Parallel Processing，MPP)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E7%BA%A7%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">三级结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%BB%93%E7%82%B9Node"><span class="nav-number">2.1.</span> <span class="nav-text">内存结点Node</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%8C%BAZone"><span class="nav-number">2.2.</span> <span class="nav-text">管理区Zone</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2Page"><span class="nav-number">2.3.</span> <span class="nav-text">页面Page</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B5"><span class="nav-number">3.</span> <span class="nav-text">页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">数据结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA"><span class="nav-number">4.</span> <span class="nav-text">区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0%E4%B8%8E%E5%88%86%E7%B1%BB"><span class="nav-number">4.1.</span> <span class="nav-text">产生原因与分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1"><span class="nav-number">4.2.</span> <span class="nav-text">数据结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E9%85%8D"><span class="nav-number">5.</span> <span class="nav-text">分配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8E%E7%BA%A7%E9%A1%B5%E5%88%86%E9%85%8D"><span class="nav-number">5.1.</span> <span class="nav-text">低级页分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kmalloc"><span class="nav-number">5.2.</span> <span class="nav-text">kmalloc()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kfree"><span class="nav-number">5.3.</span> <span class="nav-text">kfree()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vmalloc"><span class="nav-number">5.4.</span> <span class="nav-text">vmalloc()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vfree"><span class="nav-number">5.5.</span> <span class="nav-text">vfree()</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="huster-djx"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">huster-djx</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/husterdjx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;husterdjx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/76643896@qq.com" title="E-Mail → 76643896@qq.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/husterdjx" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="huster-djx">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="huster-DJX">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux-物理内存组织
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-03-22 15:45:59 / 修改时间：19:53:22" itemprop="dateCreated datePublished" datetime="2022-03-22T15:45:59+08:00">2022-03-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>如题</p>
+<span id="more"></span>
+
+<h1 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h1><h2 id="非一致内存访问（Non-Uniform-Memory-Access-NUMA）"><a href="#非一致内存访问（Non-Uniform-Memory-Access-NUMA）" class="headerlink" title="非一致内存访问（Non-Uniform Memory Access, NUMA）"></a>非一致内存访问（Non-Uniform Memory Access, NUMA）</h2><p>指内存被划分成多个内存节点的多处理器系统，访问一个内存节点花费的时间取决于处理器和内存节点的距离。每个处理器有一个本地内存节点，处理器访问本地内存节点的速度比访问其他内存节点的速度快。NUMA是中高端服务器的主流体系结构。</p>
+<h2 id="对称多处理器（Symmetric-Multi-Processor-SMP）"><a href="#对称多处理器（Symmetric-Multi-Processor-SMP）" class="headerlink" title="对称多处理器（Symmetric Multi-Processor, SMP）"></a>对称多处理器（Symmetric Multi-Processor, SMP）</h2><p>即一致内存访问（Uniform MemoryAccess, UMA），所有处理器访问内存花费的时间是相同的。每个处理器的地位是平等的，多个CPU对称工作，无主次或从属关系。仅在内核初始化的时候不平等：“0号处理器作为引导处理器负责初始化内核，其他处理器等待内核初始化完成。”</p>
+<p>SMP服务器的主要特征是<strong>共享</strong>，系统中所有资源(CPU、内存、I/O等)都是共享的。也正是由于这种特征，导致了SMP服务器的主要问题，那就是它的扩展能力非常有限。</p>
+<h2 id="海量并行处理结构-Massive-Parallel-Processing，MPP"><a href="#海量并行处理结构-Massive-Parallel-Processing，MPP" class="headerlink" title="海量并行处理结构(Massive Parallel Processing，MPP)"></a>海量并行处理结构(Massive Parallel Processing，MPP)</h2><p>由多个SMP服务器(每个SMP服务器称节点)通过节点互联网络连接而成，每个节点只访问自己的本地资源(内存、存储等)，是一种完全无共享(Share Nothing)结构，因而扩展能力最好，理论上其扩展无限制，目前的技术可实现512个节点互联，数千个CPU。</p>
+<p>在MPP系统中，每个SMP节点也可以运行自己的操作系统、数据库等。但和NUMA不同的是，它不存在异地内存访问的问题。换言之，每个节点内的CPU不能访问另一个节点的内存。节点之间的信息交互是通过节点互联网络实现的，这个过程一般称为数据重分配(Data Redistribution)。</p>
+<h1 id="三级结构"><a href="#三级结构" class="headerlink" title="三级结构"></a>三级结构</h1><h2 id="内存结点Node"><a href="#内存结点Node" class="headerlink" title="内存结点Node"></a>内存结点Node</h2><p>内存被分割成多个区域（BANK，也叫”簇”），依据簇与处理器的”距离”不同, 访问不同簇的代码也会不同. 比如，可能把内存的一个簇指派给每个处理器，或则某个簇和设备卡很近，很适合DMA，那么就指派给该设备。</p>
+<p>CPU被划分为多个节点(node), 内存则被分簇, 每个CPU对应一个本地物理内存, 即<strong>一个CPU-node对应一个内存簇bank</strong>，即<strong>每个内存簇被认为是一个节点</strong>。</p>
+<h2 id="管理区Zone"><a href="#管理区Zone" class="headerlink" title="管理区Zone"></a>管理区Zone</h2><p>每个物理内存节点node被划分为多个内存管理区域, 用于表示不同范围的内存, 内核可以使用不同的映射方式映射物理内存</p>
+<h2 id="页面Page"><a href="#页面Page" class="headerlink" title="页面Page"></a>页面Page</h2><p>页面是最基本的页面分配的单位。</p>
+<h1 id="页"><a href="#页" class="headerlink" title="页"></a>页</h1><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">page</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>			flags;		<span class="comment">//存放页的状态</span></span><br><span class="line">    <span class="keyword">atomic_t</span>				_count;		<span class="comment">//存放页的引用计数</span></span><br><span class="line">    <span class="keyword">atomic_t</span>				_mapcount;	</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>			<span class="keyword">private</span>;	</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">address_space</span>	*<span class="title">mapping</span>;</span>	<span class="comment">//页由页缓存使用时，指向与这个页相关联的address_space对象</span></span><br><span class="line">    <span class="keyword">pgoff_t</span>					index;		</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>		<span class="title">lru</span>;</span></span><br><span class="line">    <span class="keyword">void</span>					*<span class="keyword">virtual</span>;	<span class="comment">//页的虚拟地址。通常状况下，它就是页在虚拟内存中的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>page结构与物理页相关，这种数据结构的目的在于描述物理内存本身，其中的数据是可能因为时间不同被交换而发生改变的。</p>
+<h1 id="区"><a href="#区" class="headerlink" title="区"></a>区</h1><h2 id="产生原因与分类"><a href="#产生原因与分类" class="headerlink" title="产生原因与分类"></a>产生原因与分类</h2><ul>
+<li>一些硬件只能用某些特定的内存地址来执行DMA</li>
+<li>一些体系结构的内存的物理寻址范围比虚拟寻址范围大得多，这样就有一些内存不能永久地映射到内核空间上。</li>
+</ul>
+<p>这些制约条件导致内核把页划分为不同的区(zone)：</p>
+<ul>
+<li>ZONE_DMA——这个区包含的页能执行DMA操作</li>
+<li>ZONE_DMA32——这个区包含的页面能执行DMA操作，但只能被32位设备访问</li>
+<li>ZONE_NORMAL——包含能被正常映射的页</li>
+<li>ZONE_HIGHEM——包含高端内存（high memory），其中的页不能永久地映射到内核地址空间。x86-64体系结构没有这个区。</li>
+<li>ZONE_MOVABLE——它是一个伪内存区域，用来防止内存碎片</li>
+</ul>
+<p>还有两种不太重要的，这些都在<code>&lt;linux/mmzone.h&gt;</code>中定义。</p>
+<img src="/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/x86-32%E5%8C%BA.png" class="" title="[x86-32区]">
+
+<h2 id="数据结构-1"><a href="#数据结构-1" class="headerlink" title="数据结构"></a>数据结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">zone</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>			watermark[NR_WMARK];</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">spinlock_t</span>				lock;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>				*name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>lock只保护结构，不保护驻留在区中的所有页。没有特定的锁来保护某个单页。</p>
+<p>watermark数组持有该区的最小值、最低和最高水位值。内核使用水位为每个内存区设置合适的内存消耗基准，该值随空闲内存的多少而变化。</p>
+<h1 id="分配"><a href="#分配" class="headerlink" title="分配"></a>分配</h1><h2 id="低级页分配"><a href="#低级页分配" class="headerlink" title="低级页分配"></a>低级页分配</h2><img src="/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/%E4%BD%8E%E7%BA%A7%E9%A1%B5%E5%88%86%E9%85%8D%E6%96%B9%E6%B3%95.png" class="" title="[低级页分配方法]">
+
+<h2 id="kmalloc"><a href="#kmalloc" class="headerlink" title="kmalloc()"></a>kmalloc()</h2><p><code>&lt;linux/slab.h&gt;</code>中声明：</p>
+<p><code>void* kmalloc(size_t size, gfp_t flags);</code></p>
+<p>返回一个指向内存块的指针，其内存块至少要有size大小。所分配的内存区在物理上是连续的。分配错误返回NULL。</p>
+<p><a target="_blank" rel="noopener" href="https://awesome-programming-books.github.io/linux/Linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%EF%BC%88%E7%AC%AC%E4%B8%89%E7%89%88%EF%BC%89.pdf">标志符</a>，书209页。</p>
+<h2 id="kfree"><a href="#kfree" class="headerlink" title="kfree()"></a>kfree()</h2><p><code>&lt;linux/slab.h&gt;</code>中声明：</p>
+<p><code>void kfree(const void *ptr);</code></p>
+<p>注意调用kfree(NULL)是安全的。</p>
+<h2 id="vmalloc"><a href="#vmalloc" class="headerlink" title="vmalloc()"></a>vmalloc()</h2><p><code>&lt;linux/vmalloc.h&gt;</code>中声明：</p>
+<p><code>void* vmalloc(unsigned long size);</code></p>
+<p>返回一个指针指向<strong>逻辑上连续</strong>的一块内存区，其大小至少为size。函数可能睡眠，所以<strong>不能从中断上下文中调用</strong>，也不能在不允许阻塞的情况下使用。</p>
+<p>这里分配的物理地址无需连续。</p>
+<p>准确的说，malloc()返回的页在进程的虚拟地址空间内连续，但不保证在物理RAM中连续；vmalloc()也是如此。</p>
+<p>vmalloc为了把物理上不连续的页转化为虚拟地址空间上连续的页，必须专门建立页表项，这种一个一个地映射会导致比直接内存映射大得多的TLB抖动。所以只在比如获得大块内存的时候采用。</p>
+<h2 id="vfree"><a href="#vfree" class="headerlink" title="vfree()"></a>vfree()</h2><p><code>void vfree(const void* addr);</code></p>
+<p>搭配vmalloc使用。可以睡眠。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+        <a target="_blank" class="social-link" href="/images/wechat_channel.png">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/" rel="prev" title="Linux-伙伴分配器">
+                  <i class="fa fa-chevron-left"></i> Linux-伙伴分配器
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/22/Linux-slab%E5%B1%82/" rel="next" title="Linux-slab层">
+                  Linux-slab层 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">huster-djx</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">137k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:04</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
