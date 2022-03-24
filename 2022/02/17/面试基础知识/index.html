@@ -67,7 +67,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%BE%85%E5%8A%A9%E7%B4%A2%E5%BC%95.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E4%BD%8D%E5%9B%BE%E7%B4%A2%E5%BC%95.png">
 <meta property="article:published_time" content="2022-02-17T07:32:46.000Z">
-<meta property="article:modified_time" content="2022-03-14T12:35:24.530Z">
+<meta property="article:modified_time" content="2022-03-24T09:39:37.956Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="找工">
 <meta name="twitter:card" content="summary">
@@ -271,7 +271,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-14 20:35:24" itemprop="dateModified" datetime="2022-03-14T20:35:24+08:00">2022-03-14</time>
+        <time title="修改时间：2022-03-24 17:39:37" itemprop="dateModified" datetime="2022-03-24T17:39:37+08:00">2022-03-24</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -290,7 +290,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>45k</span>
+      <span>46k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -927,6 +927,7 @@
 <h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><ul>
 <li>100 Continue 信息型状态响应码表示目前为止一切正常, 客户端应该继续请求, 如果已完成请求则忽略. </li>
 <li>200 OK 客户端请求成功</li>
+<li>204 No Content 方法POST可能导致这个结果</li>
 <li>300 Multiple Choices（多项选择） 客户端请求了实际指向多个资源的URL。这个代码是和一个选项列表一起返回的，然后用户就可以选择他希望的选项</li>
 <li>301 Moved Permanently 请求永久重定向。请求的URL已移走。Response中应该包含一个Location URL, 说明资源现在所处的位置</li>
 <li>302 Moved Temporarily 请求临时重定向。与301相似，但只是表示移除是临时的。</li>
@@ -962,7 +963,12 @@
 <p>在正确实现的条件下，GET，HEAD，PUT（PUT执行的是覆盖操作） 和 DELETE 等方法都是幂等的，而 POST 方法不是。</p>
 </li>
 <li><p>缓存性：</p>
-<p>请求报文的 HTTP 方法本身是可缓存在本地浏览器的，包括 GET 和 HEAD，但是 PUT 和 DELETE 不可缓存，POST 在多数情况下不可缓存的。</p>
+<p>请求报文的 HTTP 方法本身是可缓存在本地浏览器的，包括 GET 和 HEAD，但是 PUT 和 DELETE 不可缓存，POST 在多数情况下不可缓存的（除非包含Cache-Control或Expires头部）。</p>
+</li>
+<li><p>POST：</p>
+<p>POST 方法用于请求源服务器接受请求中包含的实体作为请求行中URI标识的资源的新下级。</p>
+<p>POST方法执行的操作可能不会产生可由URI标识的资源，在这种情况下，200（OK）或204（No Content）是适当的响应状态，具体取决于响应是否包含描述结果的实体。（根据RFC 2616 HTTP/1.1）</p>
+<p>如果已经在源服务器上创建资源，则响应应为201（已创建）。</p>
 </li>
 </ol>
 </li>
@@ -1033,7 +1039,8 @@
 <h4 id="默认长连接"><a href="#默认长连接" class="headerlink" title="默认长连接"></a>默认长连接</h4><img src="/2022/02/17/%E9%9D%A2%E8%AF%95%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E7%9F%AD%E8%BF%9E%E6%8E%A5%E3%80%81%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%AE%A1%E9%81%93%E6%9C%BA%E5%88%B6.jpg" class="" title="短连接、长连接和管道机制]">
 
 <h4 id="支持同时打开多个TCP连接"><a href="#支持同时打开多个TCP连接" class="headerlink" title="支持同时打开多个TCP连接"></a>支持同时打开多个TCP连接</h4><h4 id="支持分块编码传输"><a href="#支持分块编码传输" class="headerlink" title="支持分块编码传输"></a>支持分块编码传输</h4><p>Chunked Transfer Encoding，可以把数据分割成多块，让浏览器逐步显示页面。</p>
-<h4 id="Session和Cookie"><a href="#Session和Cookie" class="headerlink" title="Session和Cookie"></a>Session和Cookie</h4><p>Cookie 和 Session 的区别：</p>
+<h4 id="Session和Cookie"><a href="#Session和Cookie" class="headerlink" title="Session和Cookie"></a>Session和Cookie</h4><p>Session和Cookie都是用作<strong>保持会话状态</strong>的，用户自己的定制信息都在数据库中。</p>
+<p>Cookie 和 Session 的区别：</p>
 <ul>
 <li>Cookie存储在客户端浏览器中,Session存储在服务端</li>
 <li>Cookie 只能存储 ASCII 码字符串，而 Session 则可以存储任何类型的数据</li>
@@ -1680,13 +1687,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">137k</span>
+    <span title="站点总字数">138k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:04</span>
+    <span title="站点阅读时长">2:05</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

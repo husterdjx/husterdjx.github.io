@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/GMP.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/21/golang-goroutine/%E5%8D%8F%E7%A8%8B%E8%B0%83%E5%BA%A6.png">
 <meta property="article:published_time" content="2022-02-21T03:14:49.000Z">
-<meta property="article:modified_time" content="2022-03-11T14:53:50.423Z">
+<meta property="article:modified_time" content="2022-03-24T09:40:26.442Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -236,7 +236,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-11 22:53:50" itemprop="dateModified" datetime="2022-03-11T22:53:50+08:00">2022-03-11</time>
+        <time title="修改时间：2022-03-24 17:40:26" itemprop="dateModified" datetime="2022-03-24T17:40:26+08:00">2022-03-24</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -345,7 +345,7 @@
 <h3 id="主动挂起（如sleep）操作导致Goroutine阻塞"><a href="#主动挂起（如sleep）操作导致Goroutine阻塞" class="headerlink" title="主动挂起（如sleep）操作导致Goroutine阻塞"></a>主动挂起（如sleep）操作导致Goroutine阻塞</h3><p>golang优化了time.Sleep()方法，避免其进行系统调用从而带来一些系统级别的开销。</p>
 <p>当我们在goroutine中调用time.Sleep()方法时，<strong>底层会创建一个 timer, 并将当前goroutine与timer进行绑定</strong>，并提供一个唤醒该goroutine的方法<code>goroutineReady</code>，该方法会存在被创建的timer结构体中。</p>
 <p>然后将timer加入到<strong>每个P对应的单独管理计时器</strong>中(通过<strong>最小四叉堆</strong>的数据结构存放每个定时器在<code>runtime.p</code>中)，且每一个加入到timer管理器中的timer都会被按唤醒时间进行排序，最早需要唤醒的timer排在最前面。</p>
-<p>再通过<strong>gopark()方法</strong>将当前goroutine状态标记为为**_Gwaiting<strong>，</strong>解除G与M的绑定关系<strong>，</strong>调用schedule()函数**，重新选择一个goroutine去执行。</p>
+<p>再通过<strong>gopark()方法</strong>将当前goroutine状态标记为为**_Gwaiting，解除G与M的绑定关系，调用schedule()函数**，重新选择一个goroutine去执行。</p>
 <p>此时被挂起的Goroutine不在任何运行队列上。</p>
 <h4 id="如何被唤醒"><a href="#如何被唤醒" class="headerlink" title="如何被唤醒"></a>如何被唤醒</h4><p>对睡眠线程的<strong>定时器</strong>的监控由调度器和系统监控共同执行。</p>
 <h5 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h5><p>调度器处理计时器，即调用<code>runtime.checkTimers</code>的场景：（这个函数是针对某一个P的检查）</p>
@@ -504,13 +504,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">137k</span>
+    <span title="站点总字数">138k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:04</span>
+    <span title="站点阅读时长">2:05</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

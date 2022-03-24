@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://husterdjx.github.io/2022/02/16/golang-%E5%85%B3%E9%94%AE%E5%AD%97/2020-01-17-15792766877627-golang-for-loop-ssa.png">
 <meta property="article:published_time" content="2022-02-16T10:51:31.000Z">
-<meta property="article:modified_time" content="2022-03-03T07:38:29.490Z">
+<meta property="article:modified_time" content="2022-03-23T03:17:15.306Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
@@ -123,7 +123,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#for%E5%92%8Crange"><span class="nav-number">1.</span> <span class="nav-text">for和range</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tips"><span class="nav-number">1.1.</span> <span class="nav-text">tips</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8for%E5%BE%AA%E7%8E%AF"><span class="nav-number">1.2.</span> <span class="nav-text">经典for循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#range%E5%AF%B9%E5%93%88%E5%B8%8C%E8%A1%A8%E7%9A%84%E8%BF%AD%E4%BB%A3"><span class="nav-number">1.3.</span> <span class="nav-text">range对哈希表的迭代</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#select"><span class="nav-number">2.</span> <span class="nav-text">select</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#panic%E5%92%8Crecover"><span class="nav-number">3.</span> <span class="nav-text">panic和recover</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#make%E5%92%8Cnew"><span class="nav-number">4.</span> <span class="nav-text">make和new</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#for%E5%92%8Crange"><span class="nav-number">1.</span> <span class="nav-text">for和range</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tips"><span class="nav-number">1.1.</span> <span class="nav-text">tips</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8for%E5%BE%AA%E7%8E%AF"><span class="nav-number">1.2.</span> <span class="nav-text">经典for循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#range%E5%AF%B9%E5%93%88%E5%B8%8C%E8%A1%A8%E7%9A%84%E8%BF%AD%E4%BB%A3"><span class="nav-number">1.3.</span> <span class="nav-text">range对哈希表的迭代</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#select"><span class="nav-number">2.</span> <span class="nav-text">select</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%B5%81%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">常见流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#panic%E5%92%8Crecover"><span class="nav-number">3.</span> <span class="nav-text">panic和recover</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#make%E5%92%8Cnew"><span class="nav-number">4.</span> <span class="nav-text">make和new</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -233,7 +233,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-03 15:38:29" itemprop="dateModified" datetime="2022-03-03T15:38:29+08:00">2022-03-03</time>
+        <time title="修改时间：2022-03-23 11:17:15" itemprop="dateModified" datetime="2022-03-23T11:17:15+08:00">2022-03-23</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -252,7 +252,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
+      <span>2.7k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -294,6 +294,37 @@
 <ol>
 <li><code>select</code> 能在 Channel 上进行非阻塞的收发操作：利用default</li>
 <li><code>select</code> 在遇到多个 Channel 同时响应时，会随机执行一种情况：避免饥饿问题的发生</li>
+</ol>
+<p>显然比较得出与switch的区别：</p>
+<ol>
+<li>select是随机选择可执行的，switch是顺序判断；</li>
+<li>select的case中的表达式必须都是Channel的收发操作；</li>
+</ol>
+<h2 id="常见流程"><a href="#常见流程" class="headerlink" title="常见流程"></a>常见流程</h2><p>首先在编译期间，Go 语言会对 <code>select</code> 语句进行优化，它会根据 <code>select</code> 中 <code>case</code> 的不同选择不同的优化路径：</p>
+<ol>
+<li><strong>空的</strong> <code>select</code> 语句会被转换成调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.block"><code>runtime.block</code></a> 直接<strong>挂起</strong>当前 Goroutine；</li>
+<li>如果select语句中只包含一个case，编译器会将其转换成<code>if ch == nil &#123; block &#125;; n;</code>表达式；<ul>
+<li>首先判断操作的 Channel 是不是空的；</li>
+<li>然后执行 <code>case</code> 结构中的内容；</li>
+</ul>
+</li>
+<li>如果 <code>select</code> 语句中只包含两个 <code>case</code> 并且其中一个是 <code>default</code>，那么会使用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.selectnbrecv"><code>runtime.selectnbrecv</code></a> 和 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.selectnbsend"><code>runtime.selectnbsend</code></a> <strong>非阻塞地</strong>执行收发操作；</li>
+<li>在默认情况下会通过 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.selectgo"><code>runtime.selectgo</code></a> 获取执行 <code>case</code> 的索引，并通过多个 <code>if</code> 语句执行对应 <code>case</code> 中的代码；</li>
+</ol>
+<p>在编译器已经对 <code>select</code> 语句进行优化之后，Go 语言会在运行时执行编译期间展开的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.selectgo"><code>runtime.selectgo</code></a> 函数，该函数会按照以下的流程执行：</p>
+<ol>
+<li><p>随机生成一个遍历的轮询顺序 <code>pollOrder</code> 并根据 Channel 地址生成锁定顺序 <code>lockOrder</code>；（随机的轮询顺序可以避免 Channel 的饥饿问题，保证公平性；而根据 Channel 的地址顺序确定加锁顺序能够避免死锁的发生。）</p>
+</li>
+<li><p>根据<code>pollOrder</code>遍历所有的<code>case</code>查看是否有可以立刻处理的 Channel；</p>
+<ol>
+<li><p>如果存在，直接获取 <code>case</code> 对应的索引并返回；</p>
+</li>
+<li><p>如果不存在，创建 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.sudog"><code>runtime.sudog</code></a> 结构体（<em>represent a <strong>g</strong> in a wait list, such as for sending/receiving on a channel</em>），将当前 Goroutine 加入到<strong>所有相关 Channel 的收发队列</strong>，并调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.gopark"><code>runtime.gopark</code></a> <strong>挂起当前 Goroutine 等待调度器的唤醒</strong>；</p>
+</li>
+</ol>
+</li>
+<li><p>当调度器唤醒当前 Goroutine 时，会再次按照 <code>lockOrder</code> 遍历所有的 <code>case</code>，从中查找需要被处理的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.sudog"><code>runtime.sudog</code></a> 对应的索引；</p>
+</li>
 </ol>
 <h1 id="panic和recover"><a href="#panic和recover" class="headerlink" title="panic和recover"></a>panic和recover</h1><ul>
 <li><code>panic</code> 能够改变程序的控制流，调用 <code>panic</code> 后会立刻停止执行当前函数的剩余代码，并在当前 Goroutine 中递归执行调用方的 <code>defer</code>；</li>
@@ -384,13 +415,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">137k</span>
+    <span title="站点总字数">138k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:04</span>
+    <span title="站点阅读时长">2:05</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
