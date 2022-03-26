@@ -28,8 +28,9 @@
 <meta property="og:description" content="Linux内存管理之伙伴分配器">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/zone.png">
+<meta property="og:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/%E5%88%86%E9%85%8D%E9%A1%B5%E6%85%A2%E9%80%9F%E8%B7%AF%E5%BE%84.png">
 <meta property="article:published_time" content="2022-03-22T07:39:34.000Z">
-<meta property="article:modified_time" content="2022-03-22T12:53:27.968Z">
+<meta property="article:modified_time" content="2022-03-26T14:52:22.302Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -123,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%9A%84%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">基本的伙伴分配器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%8C%BA"><span class="nav-number">3.</span> <span class="nav-text">分区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%88%86%E9%85%8D%E6%A0%87%E5%BF%97%E5%BE%97%E5%88%B0%E9%A6%96%E9%80%89%E5%8C%BA%E5%9F%9F%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">根据分配标志得到首选区域类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%87%E7%94%A8%E5%8C%BA%E5%9F%9F"><span class="nav-number">3.2.</span> <span class="nav-text">备用区域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%9F%9F%E6%B0%B4%E7%BA%BF"><span class="nav-number">3.3.</span> <span class="nav-text">区域水线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E6%AD%A2%E8%BF%87%E5%BA%A6%E5%80%9F%E7%94%A8"><span class="nav-number">3.4.</span> <span class="nav-text">防止过度借用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E7%A7%BB%E5%8A%A8%E6%80%A7%E5%88%86%E7%BB%84"><span class="nav-number">4.</span> <span class="nav-text">可移动性分组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E5%A4%84%E7%90%86%E5%99%A8%E9%A1%B5%E9%9B%86%E5%90%88%EF%BC%88%E9%92%88%E5%AF%B9%E5%8D%95%E9%A1%B5%E5%88%86%E9%85%8D%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">每处理器页集合（针对单页分配）</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%9A%84%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">基本的伙伴分配器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%8C%BA"><span class="nav-number">3.</span> <span class="nav-text">分区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E5%88%86%E9%85%8D%E6%A0%87%E5%BF%97%E5%BE%97%E5%88%B0%E9%A6%96%E9%80%89%E5%8C%BA%E5%9F%9F%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">根据分配标志得到首选区域类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%87%E7%94%A8%E5%8C%BA%E5%9F%9F"><span class="nav-number">3.2.</span> <span class="nav-text">备用区域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%9F%9F%E6%B0%B4%E7%BA%BF"><span class="nav-number">3.3.</span> <span class="nav-text">区域水线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E6%AD%A2%E8%BF%87%E5%BA%A6%E5%80%9F%E7%94%A8"><span class="nav-number">3.4.</span> <span class="nav-text">防止过度借用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E7%A7%BB%E5%8A%A8%E6%80%A7%E5%88%86%E7%BB%84"><span class="nav-number">4.</span> <span class="nav-text">可移动性分组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%8F%E5%A4%84%E7%90%86%E5%99%A8%E9%A1%B5%E9%9B%86%E5%90%88%EF%BC%88%E9%92%88%E5%AF%B9%E5%8D%95%E9%A1%B5%E5%88%86%E9%85%8D%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">每处理器页集合（针对单页分配）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E4%BB%A3%E7%A0%81%E6%B5%81%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">分配代码流程</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -139,7 +140,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -225,10 +226,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-03-22 15:39:34 / 修改时间：20:53:27" itemprop="dateCreated datePublished" datetime="2022-03-22T15:39:34+08:00">2022-03-22</time>
+      <time title="创建时间：2022-03-22 15:39:34" itemprop="dateCreated datePublished" datetime="2022-03-22T15:39:34+08:00">2022-03-22</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-03-26 22:52:22" itemprop="dateModified" datetime="2022-03-26T22:52:22+08:00">2022-03-26</time>
+      </span>
 
   
     <span class="post-meta-break"></span>
@@ -237,14 +244,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.7k</span>
+      <span>4.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>4 分钟</span>
     </span>
 </div>
 
@@ -264,7 +271,8 @@
 <li>页块的第一页的物理页号必须是2的n次幂的整数倍，如0号页，2号页，4号页，8号页…</li>
 <li>如果合并成(n+1)阶页块，第一页的物理页号必须是2的（n+1）次幂的整数倍。如两个1阶页块合并，第一页应是0，4，8，12…页。</li>
 </ul>
-<h1 id="基本的伙伴分配器"><a href="#基本的伙伴分配器" class="headerlink" title="基本的伙伴分配器"></a>基本的伙伴分配器</h1><p>伙伴分配器分配和释放物理页的数量单位是阶。分配n阶页块的过程如下。</p>
+<h1 id="基本的伙伴分配器"><a href="#基本的伙伴分配器" class="headerlink" title="基本的伙伴分配器"></a>基本的伙伴分配器</h1><p>Linux把所有的空闲页块分组为11个块链表，每个链表上的页块数量是固定的。</p>
+<p>伙伴分配器分配和释放物理页的数量单位是阶。分配n阶页块的过程如下。</p>
 <p>（1）查看是否有空闲的n阶页块，如果有，直接分配；如果没有，继续执行下一步。</p>
 <p>（2）查看是否存在空闲的（n+1）阶页块，如果有，把（n+1）阶页块分裂为两个n阶页块，一个插入空闲n阶页块链表，另一个分配出去；如果没有，继续执行下一步。</p>
 <p>（3）查看是否存在空闲的（n+2）阶页块，如果有，把（n+2）阶页块分裂为两个（n+1）阶页块，一个插入空闲（n+1）阶页块链表，另一个分裂为两个n阶页块，一个插入空闲n阶页块链表，另一个分配出去；如果没有，继续查看更高阶是否存在空闲页块。</p>
@@ -273,8 +281,13 @@
 <p>所以这里的数据结构是通过zone来展开的。</p>
 <img src="/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/zone.png" class="" title="[zone.png]">
 
-<p>freearea维护空闲页块，数组下标对应页块的阶数。结构体free_area的成员free_list是空闲页块的链表。nr_free是空闲页块的数量。内存区域的结构体成员managed_pages是伙伴分配器管理的物理页的数量，不包括引导内存分配器分配的物理页</p>
+<p>freearea维护空闲页块，数组下标对应页块的阶数。结构体free_area的成员free_list是空闲页块的链表。nr_free是空闲页块的数量。内存区域的结构体成员managed_pages是伙伴分配器管理的物理页的数量，不包括引导内存分配器分配的物理页。比如free_area[2]中nr_free的值为5，表示有5个大小为4的页框块，那么总的空闲页为20.</p>
 <p>MAX_ORDER是最大阶数，实际上是可分配的最大阶数加1，默认值是11，意味着伙伴分配器一次最多可以分配2的10次方页。</p>
+<p>对于free_list中的MIGRATE_TYPES表示的是迁移页的类型,在内核中的定义为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MIGRATE_UNMOVABLE     0   <span class="comment">//不可移动页：在内存中有固定位置，不能移动到其他地方  </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MIGRATE_RECLAIMABLE   1   <span class="comment">//可回收页：不能直接移动，但可以删除，其内容可以从某些源重新生成  </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MIGRATE_MOVABLE       2   <span class="comment">//可移动页：可以随意的移动  </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MIGRATE_RESERVE       3   <span class="comment">//如果向具有特定可移动性地列表请求分配内存失败，这种紧急情况下可以从MIGRATE_RESERVE分配内存  </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MIGRATE_ISOLATE       4  <span class="comment">//是一个特殊的虚拟区域，用于跨域NUMA结点移动物理内存页，在大型系统上，它有益于将物理内存页移动到接近于是用该页最频繁的CPU  </span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MIGRATE_TYPES         5  <span class="comment">//只是表示迁移类型的数目，不代表具体的区域 </span></span></span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="根据分配标志得到首选区域类型"><a href="#根据分配标志得到首选区域类型" class="headerlink" title="根据分配标志得到首选区域类型"></a>根据分配标志得到首选区域类型</h2><p>申请页时，内核使用函数gfp_zone()根据分配标志得到首选的区域类型。</p>
 <h2 id="备用区域"><a href="#备用区域" class="headerlink" title="备用区域"></a>备用区域</h2><p>如果<strong>首选的内存节点和区域不能满足</strong>页分配请求，可以从备用的内存区域借用物理页，借用必须遵守以下原则。</p>
 <p>（1）一个内存节点的某个区域类型可以从另一个内存节点的<strong>相同区域类型</strong>借用物理页，例如节点0的普通区域可以从节点1的普通区域借用物理页。</p>
@@ -305,6 +318,33 @@
 <p>从某个内存区域申请某种迁移类型的单页时，从当前处理器的页集合中该迁移类型的页链表分配页，如果页链表是空的，先批量申请页加入页链表，然后分配一页。</p>
 <p><strong>缓存热页</strong>是指刚刚访问过物理页，物理页的数据还在处理器的缓存中。<strong>如果要申请缓存热页，从页链表首部分配页；如果要申请缓存冷页，从页链表尾部分配页。</strong></p>
 <p>释放单页时，把页加入当前处理器的页集合中。如果释放缓存热页，加入页链表首部；如果释放缓存冷页，加入页链表尾部。如果页集合中的<strong>页数量大于或等于高水线</strong>，那么批量返还给伙伴分配器。</p>
+<h1 id="分配代码流程"><a href="#分配代码流程" class="headerlink" title="分配代码流程"></a>分配代码流程</h1><p>所有调用接口都会调用alloc_pages这个接口</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> alloc_pages(gfp_mask, order) alloc_pages_node(numa_node_id(), gfp_mask, order)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> struct page *<span class="title">alloc_pages_node</span><span class="params">(<span class="keyword">int</span> nid, <span class="keyword">gfp_t</span> gfp_mask,</span></span></span><br><span class="line"><span class="params"><span class="function">						<span class="keyword">unsigned</span> <span class="keyword">int</span> order)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">/* Unknown node is current node */</span></span><br><span class="line">	<span class="keyword">if</span> (nid &lt; <span class="number">0</span>)</span><br><span class="line">		nid = numa_node_id();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> __alloc_pages(gfp_mask, order, node_zonelist(nid, gfp_mask));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>node_zonelist()</code>会根据节点号找到对应的zone。</p>
+<p>接下来就是最重要的函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*This is the &#x27;heart&#x27; of the zoned buddy allocator.*/</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">page</span> *__<span class="title">alloc_pages</span>(<span class="title">gfp_t</span> <span class="title">gfp</span>, <span class="title">unsigned</span> <span class="title">int</span> <span class="title">order</span>, <span class="title">int</span> <span class="title">preferred_nid</span>,</span></span><br><span class="line"><span class="class">							<span class="title">nodemask_t</span> *<span class="title">nodemask</span>)</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span>;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> alloc_flags = ALLOC_WMARK_LOW;</span><br><span class="line">	<span class="keyword">gfp_t</span> alloc_gfp; <span class="comment">/* The gfp_t that was actually used for allocation */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">alloc_context</span> <span class="title">ac</span> =</span> &#123; &#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * There are several places where we assume that the order value is sane</span></span><br><span class="line"><span class="comment">	 * so bail out early if the request is out of bound.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (unlikely(order &gt;= MAX_ORDER)) &#123;</span><br><span class="line">		WARN_ON_ONCE(!(gfp &amp; __GFP_NOWARN));</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">    <span class="comment">/*根据分配标志位得到首选区域类型和迁移类型*/</span></span><br><span class="line">	<span class="keyword">if</span> (!prepare_alloc_pages(gfp, order, preferred_nid, nodemask, &amp;ac,</span><br><span class="line">			&amp;alloc_gfp, &amp;alloc_flags))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* First allocation attempt */</span></span><br><span class="line">    <span class="comment">/*执行快速路径，遍历zonelist、使用低水线尝试第一次分配。*/</span></span><br><span class="line">	page = get_page_from_freelist(alloc_gfp, order, alloc_flags, &amp;ac);</span><br><span class="line">	<span class="keyword">if</span> (likely(page))</span><br><span class="line">		<span class="keyword">goto</span> out;</span><br><span class="line"></span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	page = __alloc_pages_slowpath(alloc_gfp, order, &amp;ac);</span><br><span class="line"></span><br><span class="line">out:</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> page;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>快速路径：</p>
+<ul>
+<li>如果（区域的空闲页数 − 申请的页数）小于水线：<ol>
+<li>使用者不要求检查水线，那么可以分配；</li>
+<li>如果没有开启节点回收，或者当前节点和首选节点之间距离大于回收距离，那么不能分配</li>
+<li>从节点回收没有映射到进程虚拟地址空间的文件页和块分配器申请的页，然后重新检查水线，如果（区域的空闲页数 − 申请的页数）还是小于水线，那么不能从这个区域分配页。</li>
+</ol>
+</li>
+<li>从当前区域分配页</li>
+<li>如果分配成功，调用函数prep_new_page以初始化页</li>
+</ul>
+</li>
+<li><p>慢速路径：</p>
+<p>如果使用低水线分配失败，那么执行慢速路径，慢速路径是在函数<code>__alloc_pages_slowpath</code>中实现的。</p>
+<img src="/2022/03/22/Linux-%E4%BC%99%E4%BC%B4%E5%88%86%E9%85%8D%E5%99%A8/%E5%88%86%E9%85%8D%E9%A1%B5%E6%85%A2%E9%80%9F%E8%B7%AF%E5%BE%84.png" class="" title="[分配页慢速路径]">
+
+<p>如果多次尝试直接回收页和同步模式的内存碎片整理，仍然分配失败，那么使用杀伤力比较大的内存耗尽杀手选择一个进程杀死，然后尝试分配。</p>
+</li>
+</ul>
 
     </div>
 
@@ -377,13 +417,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">139k</span>
+    <span title="站点总字数">146k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:07</span>
+    <span title="站点阅读时长">2:13</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

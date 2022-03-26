@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/x86-32%E5%8C%BA.png">
 <meta property="og:image" content="https://husterdjx.github.io/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/%E4%BD%8E%E7%BA%A7%E9%A1%B5%E5%88%86%E9%85%8D%E6%96%B9%E6%B3%95.png">
 <meta property="article:published_time" content="2022-03-22T07:45:59.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:53:22.263Z">
+<meta property="article:modified_time" content="2022-03-26T13:58:35.095Z">
 <meta property="article:author" content="huster-djx">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
@@ -124,7 +124,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E4%B8%80%E8%87%B4%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%EF%BC%88Non-Uniform-Memory-Access-NUMA%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">非一致内存访问（Non-Uniform Memory Access, NUMA）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%EF%BC%88Symmetric-Multi-Processor-SMP%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">对称多处理器（Symmetric Multi-Processor, SMP）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%B7%E9%87%8F%E5%B9%B6%E8%A1%8C%E5%A4%84%E7%90%86%E7%BB%93%E6%9E%84-Massive-Parallel-Processing%EF%BC%8CMPP"><span class="nav-number">1.3.</span> <span class="nav-text">海量并行处理结构(Massive Parallel Processing，MPP)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E7%BA%A7%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">三级结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%BB%93%E7%82%B9Node"><span class="nav-number">2.1.</span> <span class="nav-text">内存结点Node</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%8C%BAZone"><span class="nav-number">2.2.</span> <span class="nav-text">管理区Zone</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2Page"><span class="nav-number">2.3.</span> <span class="nav-text">页面Page</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B5"><span class="nav-number">3.</span> <span class="nav-text">页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">数据结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA"><span class="nav-number">4.</span> <span class="nav-text">区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0%E4%B8%8E%E5%88%86%E7%B1%BB"><span class="nav-number">4.1.</span> <span class="nav-text">产生原因与分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1"><span class="nav-number">4.2.</span> <span class="nav-text">数据结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E9%85%8D"><span class="nav-number">5.</span> <span class="nav-text">分配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8E%E7%BA%A7%E9%A1%B5%E5%88%86%E9%85%8D"><span class="nav-number">5.1.</span> <span class="nav-text">低级页分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kmalloc"><span class="nav-number">5.2.</span> <span class="nav-text">kmalloc()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kfree"><span class="nav-number">5.3.</span> <span class="nav-text">kfree()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vmalloc"><span class="nav-number">5.4.</span> <span class="nav-text">vmalloc()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vfree"><span class="nav-number">5.5.</span> <span class="nav-text">vfree()</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E4%B8%80%E8%87%B4%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%EF%BC%88Non-Uniform-Memory-Access-NUMA%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">非一致内存访问（Non-Uniform Memory Access, NUMA）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8%EF%BC%88Symmetric-Multi-Processor-SMP%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">对称多处理器（Symmetric Multi-Processor, SMP）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%B7%E9%87%8F%E5%B9%B6%E8%A1%8C%E5%A4%84%E7%90%86%E7%BB%93%E6%9E%84-Massive-Parallel-Processing%EF%BC%8CMPP"><span class="nav-number">1.3.</span> <span class="nav-text">海量并行处理结构(Massive Parallel Processing，MPP)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E7%BA%A7%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">三级结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%BB%93%E7%82%B9Node"><span class="nav-number">2.1.</span> <span class="nav-text">内存结点Node</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%8C%BAZone"><span class="nav-number">2.2.</span> <span class="nav-text">管理区Zone</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2Page"><span class="nav-number">2.3.</span> <span class="nav-text">页面Page</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B5"><span class="nav-number">3.</span> <span class="nav-text">页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">3.1.</span> <span class="nav-text">数据结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA"><span class="nav-number">4.</span> <span class="nav-text">区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0%E4%B8%8E%E5%88%86%E7%B1%BB"><span class="nav-number">4.1.</span> <span class="nav-text">产生原因与分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-1"><span class="nav-number">4.2.</span> <span class="nav-text">数据结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E8%8A%82%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text">内存节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E9%85%8D"><span class="nav-number">6.</span> <span class="nav-text">分配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8E%E7%BA%A7%E9%A1%B5%E5%88%86%E9%85%8D"><span class="nav-number">6.1.</span> <span class="nav-text">低级页分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kmalloc"><span class="nav-number">6.2.</span> <span class="nav-text">kmalloc()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kfree"><span class="nav-number">6.3.</span> <span class="nav-text">kfree()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vmalloc"><span class="nav-number">6.4.</span> <span class="nav-text">vmalloc()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vfree"><span class="nav-number">6.5.</span> <span class="nav-text">vfree()</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -140,7 +140,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -226,10 +226,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-03-22 15:45:59 / 修改时间：19:53:22" itemprop="dateCreated datePublished" datetime="2022-03-22T15:45:59+08:00">2022-03-22</time>
+      <time title="创建时间：2022-03-22 15:45:59" itemprop="dateCreated datePublished" datetime="2022-03-22T15:45:59+08:00">2022-03-22</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-03-26 21:58:35" itemprop="dateModified" datetime="2022-03-26T21:58:35+08:00">2022-03-26</time>
+      </span>
 
   
     <span class="post-meta-break"></span>
@@ -238,14 +244,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.4k</span>
+      <span>3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
+      <span>3 分钟</span>
     </span>
 </div>
 
@@ -266,7 +272,7 @@
 <p>在MPP系统中，每个SMP节点也可以运行自己的操作系统、数据库等。但和NUMA不同的是，它不存在异地内存访问的问题。换言之，每个节点内的CPU不能访问另一个节点的内存。节点之间的信息交互是通过节点互联网络实现的，这个过程一般称为数据重分配(Data Redistribution)。</p>
 <h1 id="三级结构"><a href="#三级结构" class="headerlink" title="三级结构"></a>三级结构</h1><h2 id="内存结点Node"><a href="#内存结点Node" class="headerlink" title="内存结点Node"></a>内存结点Node</h2><p>内存被分割成多个区域（BANK，也叫”簇”），依据簇与处理器的”距离”不同, 访问不同簇的代码也会不同. 比如，可能把内存的一个簇指派给每个处理器，或则某个簇和设备卡很近，很适合DMA，那么就指派给该设备。</p>
 <p>CPU被划分为多个节点(node), 内存则被分簇, 每个CPU对应一个本地物理内存, 即<strong>一个CPU-node对应一个内存簇bank</strong>，即<strong>每个内存簇被认为是一个节点</strong>。</p>
-<h2 id="管理区Zone"><a href="#管理区Zone" class="headerlink" title="管理区Zone"></a>管理区Zone</h2><p>每个物理内存节点node被划分为多个内存管理区域, 用于表示不同范围的内存, 内核可以使用不同的映射方式映射物理内存</p>
+<h2 id="管理区Zone"><a href="#管理区Zone" class="headerlink" title="管理区Zone"></a>管理区Zone</h2><p>每个物理内存节点node被划分为多个内存管理区域, 用于表示不同范围的内存, 内核可以使用不同的映射方式映射物理内存。</p>
 <h2 id="页面Page"><a href="#页面Page" class="headerlink" title="页面Page"></a>页面Page</h2><p>页面是最基本的页面分配的单位。</p>
 <h1 id="页"><a href="#页" class="headerlink" title="页"></a>页</h1><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">page</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>			flags;		<span class="comment">//存放页的状态</span></span><br><span class="line">    <span class="keyword">atomic_t</span>				_count;		<span class="comment">//存放页的引用计数</span></span><br><span class="line">    <span class="keyword">atomic_t</span>				_mapcount;	</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>			<span class="keyword">private</span>;	</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">address_space</span>	*<span class="title">mapping</span>;</span>	<span class="comment">//页由页缓存使用时，指向与这个页相关联的address_space对象</span></span><br><span class="line">    <span class="keyword">pgoff_t</span>					index;		</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>		<span class="title">lru</span>;</span></span><br><span class="line">    <span class="keyword">void</span>					*<span class="keyword">virtual</span>;	<span class="comment">//页的虚拟地址。通常状况下，它就是页在虚拟内存中的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -286,10 +292,14 @@
 <p>还有两种不太重要的，这些都在<code>&lt;linux/mmzone.h&gt;</code>中定义。</p>
 <img src="/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/x86-32%E5%8C%BA.png" class="" title="[x86-32区]">
 
-<h2 id="数据结构-1"><a href="#数据结构-1" class="headerlink" title="数据结构"></a>数据结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">zone</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>			watermark[NR_WMARK];</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">spinlock_t</span>				lock;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>				*name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="数据结构-1"><a href="#数据结构-1" class="headerlink" title="数据结构"></a>数据结构</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">zone</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>			watermark[NR_WMARK];</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">/*指向这个zone所在的pglist_data对象*/</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">pglist_data</span>		*<span class="title">zone_pgdat</span>;</span>	</span><br><span class="line">    <span class="keyword">spinlock_t</span>				lock;</span><br><span class="line">    <span class="comment">/*LRU(最近最少使用算法)活动以及非活动链表使用的自旋锁*/</span></span><br><span class="line">    <span class="keyword">spinlock_t</span>          	lru_lock;</span><br><span class="line">    ...</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">per_cpu_pageset__percpu</span> *<span class="title">pageset</span>;</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>				*name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>lock只保护结构，不保护驻留在区中的所有页。没有特定的锁来保护某个单页。</p>
 <p>watermark数组持有该区的最小值、最低和最高水位值。内核使用水位为每个内存区设置合适的内存消耗基准，该值随空闲内存的多少而变化。</p>
+<p>pageset：这个数组用于实现每个CPU的热/冷页帧列表。内核使用这些列表来保存可用于满足实现的“新鲜”页。但冷热页帧对应的高速缓存状态不同：有些页帧很可能在高速缓存中，因此可以快速访问，故称之为热的；未缓存的页帧与此相对，称之为冷的。</p>
+<h1 id="内存节点"><a href="#内存节点" class="headerlink" title="内存节点"></a>内存节点</h1><p>存被划分为结点. 每个节点关联到系统中的一个处理器, 内核中表示为<code>pg_data_t</code>的实例. 系统中每个节点被链接到一个以NULL结尾的<code>pgdat_list</code>链表中，而其中的每个节点利用<code>pg_data_tnode_next</code>字段链接到下一节。</p>
+<p>每个node中又被分成多个zone（区），每个zone对应一片内存区域，用<code>struct zonelist node_zonelists[MAX_ZONELISTS]</code>表示。</p>
+<p>在分配一个页面时, Linux采用节点局部分配的策略, 从最靠近运行中的CPU的节点分配内存, 由于进程往往是在同一个CPU上运行, 因此从当前节点得到的内存很可能被用到。</p>
 <h1 id="分配"><a href="#分配" class="headerlink" title="分配"></a>分配</h1><h2 id="低级页分配"><a href="#低级页分配" class="headerlink" title="低级页分配"></a>低级页分配</h2><img src="/2022/03/22/Linux-%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%BB%84%E7%BB%87/%E4%BD%8E%E7%BA%A7%E9%A1%B5%E5%88%86%E9%85%8D%E6%96%B9%E6%B3%95.png" class="" title="[低级页分配方法]">
 
 <h2 id="kmalloc"><a href="#kmalloc" class="headerlink" title="kmalloc()"></a>kmalloc()</h2><p><code>&lt;linux/slab.h&gt;</code>中声明：</p>
@@ -379,13 +389,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">139k</span>
+    <span title="站点总字数">146k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:07</span>
+    <span title="站点阅读时长">2:13</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

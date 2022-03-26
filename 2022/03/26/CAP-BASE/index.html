@@ -20,31 +20,25 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"husterdjx.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="有捕获列表的function value">
 <meta property="og:type" content="article">
-<meta property="og:title" content="golang-闭包">
-<meta property="og:url" content="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/index.html">
+<meta property="og:title" content="CAP&amp;BASE">
+<meta property="og:url" content="https://husterdjx.github.io/2022/03/26/CAP-BASE/index.html">
 <meta property="og:site_name" content="huster-DJX">
-<meta property="og:description" content="有捕获列表的function value">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/fuc_var.png">
-<meta property="og:image" content="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/func_clo.png">
-<meta property="article:published_time" content="2021-12-12T06:56:50.000Z">
-<meta property="article:modified_time" content="2022-03-01T02:11:13.970Z">
+<meta property="article:published_time" content="2022-03-26T12:35:17.000Z">
+<meta property="article:modified_time" content="2022-03-26T12:35:17.403Z">
 <meta property="article:author" content="huster-djx">
-<meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/fuc_var.png">
 
 
-<link rel="canonical" href="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/">
+<link rel="canonical" href="https://husterdjx.github.io/2022/03/26/CAP-BASE/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/","path":"2021/12/12/golang-闭包/","title":"golang-闭包"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://husterdjx.github.io/2022/03/26/CAP-BASE/","path":"2022/03/26/CAP-BASE/","title":"CAP&BASE"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>golang-闭包 | huster-DJX</title>
+<title>CAP&BASE | huster-DJX</title>
   
 
 
@@ -111,7 +105,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <div class="sidebar-inner sidebar-overview-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -124,7 +118,6 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Function-value"><span class="nav-number">1.</span> <span class="nav-text">Function value</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">闭包</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -203,7 +196,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2021/12/12/golang-%E9%97%AD%E5%8C%85/">
+    <link itemprop="mainEntityOfPage" href="https://husterdjx.github.io/2022/03/26/CAP-BASE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -216,7 +209,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          golang-闭包
+          CAP&BASE
         </h1>
 
         <div class="post-meta-container">
@@ -227,23 +220,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-12-12 14:56:50" itemprop="dateCreated datePublished" datetime="2021-12-12T14:56:50+08:00">2021-12-12</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-03-01 10:11:13" itemprop="dateModified" datetime="2022-03-01T10:11:13+08:00">2022-03-01</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
-        </span>
+      <time title="创建时间：2022-03-26 20:35:17" itemprop="dateCreated datePublished" datetime="2022-03-26T20:35:17+08:00">2022-03-26</time>
     </span>
 
   
@@ -253,7 +230,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>895</span>
+      <span>0</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -271,27 +248,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>有捕获列表的function value</p>
-<span id="more"></span>
-
-<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ma4y1e7R5?spm_id_from=333.999.0.0">https://www.bilibili.com/video/BV1ma4y1e7R5?spm_id_from=333.999.0.0</a></p>
-<p>闭包是有状态的函数。</p>
-<p>对于没有捕获列表的Function Value，编译器做出优化，将funcval结构体分配到数据段，可以实现多个Function Value公用</p>
-<p>对于有捕获列表的，每个funcval结构体都会在堆上分配，同时伴随分配一个捕获列表。</p>
-<h1 id="Function-value"><a href="#Function-value" class="headerlink" title="Function value"></a>Function value</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	i++</span><br><span class="line">	fmt.Println(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">B</span><span class="params">()</span></span> &#123;</span><br><span class="line">	f1 := A</span><br><span class="line">	f1(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">C</span><span class="params">()</span></span> &#123;</span><br><span class="line">	f2 := A</span><br><span class="line">	f2(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/12/12/golang-%E9%97%AD%E5%8C%85/fuc_var.png" class="" title="[fuc_var]">
-
-<p>f1和f2需要通过一个二级指针来获取到真正的函数入口地址，而不是直接将f1，f2指向函数入口地址addr1。</p>
-<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><p>闭包(Closure)通俗点讲就是能够访问外部函数内部变量的函数。像这样能被访问的变量通常被称为捕获变量。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span> <span class="title">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    i := <span class="number">3</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">        <span class="keyword">return</span> i</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    f1 := A()</span><br><span class="line">    f2 := A()</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(f1())</span><br><span class="line">    pirnt(f2())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/12/12/golang-%E9%97%AD%E5%8C%85/func_clo.png" class="" title="[func_clo]">
-
-<p>若闭包捕获的变量会发生改变，编译器会智能的将该变量逃逸到堆上，这样外部函数和闭包引用的是同一个变量，此时不再是变量值的拷贝。这也是为什么下面代码总是打印循环的最后面一个值。</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fns := <span class="built_in">make</span>([]<span class="function"><span class="keyword">func</span><span class="params">()</span>, 0, 5)</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">5</span>; i++ &#123;</span><br><span class="line">		fns = <span class="built_in">append</span>(fns, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			<span class="built_in">println</span>(i)</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> _, fn := <span class="keyword">range</span> fns &#123; <span class="comment">// 最后输出5个5，而不是0，1，2，3，4</span></span><br><span class="line">		fn()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
+        
     </div>
 
     
@@ -316,22 +273,16 @@
   </div>
 </div>
 
-          <div class="post-tags">
-              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
-          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/12/09/%E5%B8%B8%E7%94%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="prev" title="常用排序算法">
-                  <i class="fa fa-chevron-left"></i> 常用排序算法
+                <a href="/2022/03/22/Linux-slab%E5%B1%82/" rel="prev" title="Linux-slab层">
+                  <i class="fa fa-chevron-left"></i> Linux-slab层
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/12/13/%E6%8E%A5%E5%8F%A3%E5%9E%8B%E5%87%BD%E6%95%B0/" rel="next" title="接口型函数">
-                  接口型函数 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
